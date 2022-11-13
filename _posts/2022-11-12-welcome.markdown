@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "Welcome!"
+date:   2022-11-12 20:05:49 +0100
+categories: welcome development
+---
+Para empezar, quiero darte la bienvenida al blog.
+
+En este blog iré documentando los progresos que vaya haciendo en los side-projects y aprovechando para comentar las lecciones aprendidas.
+
+¡A aprender!
