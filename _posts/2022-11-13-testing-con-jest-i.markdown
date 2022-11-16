@@ -252,6 +252,10 @@ Y con esto ya tendríamos los primeros tests unitarios sencillos para nuestro ba
 
 En los próximos capítulos realizaremos los tests de los demás componentes y también añadiremos algunos elementos que nos ayudarán a generar datos automáticos (como [FakerJS][faker-js]{:target="_blank"}).
 
+_Actualización_: [Segundo capítulo disponible][testing-with-jest-ii]
+
 [jest]: https://jestjs.io/es-ES/
 [example-testing-repository]: https://github.com/DomingoLlanes/domingollanes.github.io-examples/tree/main/01_express_testing
 [faker-js]: https://www.npmjs.com/package/@faker-js/faker
+
+[testing-with-jest-ii]: /testing/node/jest/2022/11/16/testing-con-jest-ii.html
