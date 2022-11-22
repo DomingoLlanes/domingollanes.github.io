@@ -458,8 +458,11 @@ A partir de aquí, simplemente tenemos que iterar sobre este proceso para añadi
 
 Si has llegado aquí directamente, puedes ver el capítulo anterior [Testing con Jest I][testing-with-jest-i]
 
+_Actualización_: [Tercer capítulo disponible][testing-with-jest-iii]
+
 [jest]: https://jestjs.io/es-ES/
 [example-testing-repository]: https://github.com/DomingoLlanes/domingollanes.github.io-examples/tree/main/01_express_testing
 [faker-js]: https://www.npmjs.com/package/@faker-js/faker
 
 [testing-with-jest-i]: /testing/node/jest/2022/11/13/testing-con-jest-i.html
+[testing-with-jest-iii]: /testing/node/jest/2022/11/22/testing-con-jest-iii.html

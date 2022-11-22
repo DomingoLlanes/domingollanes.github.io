@@ -254,8 +254,11 @@ En los próximos capítulos realizaremos los tests de los demás componentes y t
 
 _Actualización_: [Segundo capítulo disponible][testing-with-jest-ii]
 
+_Actualización_: [Tercer capítulo disponible][testing-with-jest-iii]
+
 [jest]: https://jestjs.io/es-ES/
 [example-testing-repository]: https://github.com/DomingoLlanes/domingollanes.github.io-examples/tree/main/01_express_testing
 [faker-js]: https://www.npmjs.com/package/@faker-js/faker
 
 [testing-with-jest-ii]: /testing/node/jest/2022/11/16/testing-con-jest-ii.html
+[testing-with-jest-iii]: /testing/node/jest/2022/11/22/testing-con-jest-iii.html
