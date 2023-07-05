@@ -44,7 +44,7 @@ Aunque puedes usar algunas de estas aplicaciones de forma gratuita, hay que tene
 que la complejidad adicional que conlleva el potencial que tienen puede incrementar la
 dificultad al inicio, por lo que es mejor empezar con **aplicaciones más sencillas**.
 
-Os voy a dejar algunas aplicaciones que pueden ayudaros a empezar en este sentido y que
+Dejo algunas aplicaciones que os pueden ayudar a empezar en este sentido y que
 son **gratuitas** para un uso básico (aunque tengan distintos planes de pago).
 
 ### Trello
@@ -71,9 +71,8 @@ generar contenido con Inteligencia Artificial, etc.
 
 Entre estas funcionalidades, hay un tipo de template que incluyen que es el de "Board". Este *Board*
 no es más que un panel muy sencillo, como el que hemos podido ver antes en el apartado de
-[Trello][trello]{:target="_blank"}, pero que tiene la ventaja que **permite describir las
-tarjetas muchísimo mejor**, al aprovechar todo el potencial que tiene [Notion][notion]{:target="_blank"}
-para tomar notas o escribir.
+[Trello][trello]{:target="_blank"}, pero que tiene la ventaja que **detallar mejor las tarjetas**,
+al aprovechar todo el potencial que tiene [Notion][notion]{:target="_blank"} para tomar notas o escribir.
 
 Además, tiene la ventaja que incluso pueden utilizarse otros templates como el de calendario,
 que permite no sólo gestionar tareas sino los propios deadlines para estas tareas de modo muy visual.
@@ -135,7 +134,7 @@ lugares: comunidades de Discord, repositorios de GitHub, comunidades de Slack, T
 *¡No tengas miedo a hablar con más personas!* Hay muchas personas que están aprendiendo a programar o están
 haciendo algunos proyectos secundarios que pueden necesitar ayuda o que pueden estar interesados en
 formar un equipo. Además, muchas personas están interesadas en **mentorizar desarrolladores**, lo que puede
-ayudar tanto a la persona que está contigo, para mejorar sus técnicas de mentorización, como a tí mismo,
+ayudar tanto a la persona que está contigo, para mejorar sus técnicas de mentorización, como a ti mismo,
 que recibirás un apoyo importante.
 
 En este punto, si alguien con experiencia está leyendo esto, me gustaría **animarte a que participes con
