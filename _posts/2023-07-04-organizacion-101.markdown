@@ -24,9 +24,6 @@ ejemplo, **TDD** (Test-Driven development) hace referencia a que empiezas a defi
 los tests de la aplicación y, a partir de ellos, vas desarrollando aquellas funcionalidades
 necesarias para que tus tests pasen de ROJO a VERDE.
 
-Además, organizándote puedes llegar a tener un inicio y un fin de algo, y esto ayuda muchísimo
-a la hora de estar realizando una tarea.
-
 A nivel profesional, **la organización y la priorización son puntos importantísimos** ya que,
 normalmente, el éxito de los proyectos depende de esto.
 
