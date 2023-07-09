@@ -2,9 +2,9 @@
 layout: post
 title:  "Welcome!"
 date:   2022-11-12 20:05:49 +0100
-categories: [welcome]
+categories: [localhost]
 toc: false
-tags: [other]
+tags: [localhost]
 ---
 Para empezar, quiero darte la bienvenida al blog.
 
