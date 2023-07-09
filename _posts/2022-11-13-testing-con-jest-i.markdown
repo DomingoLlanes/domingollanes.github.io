@@ -258,5 +258,5 @@ _Actualización_: [Tercer capítulo disponible][testing-with-jest-iii]
 [example-testing-repository]: https://github.com/DomingoLlanes/domingollanes.github.io-examples/tree/main/01_express_testing
 [faker-js]: https://www.npmjs.com/package/@faker-js/faker
 
-[testing-with-jest-ii]: /testing/node/jest/2022/11/16/testing-con-jest-ii.html
-[testing-with-jest-iii]: /testing/node/jest/2022/11/22/testing-con-jest-iii.html
+[testing-with-jest-ii]: /posts/testing-con-jest-ii.html
+[testing-with-jest-iii]: /posts/testing-con-jest-iii.html
