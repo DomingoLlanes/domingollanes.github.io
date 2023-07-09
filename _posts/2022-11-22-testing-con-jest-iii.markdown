@@ -2,12 +2,10 @@
 layout: post
 title:  "Testing con Jest III"
 date:   2022-11-22 04:00:49 +0100
-categories: testing node jest
+categories: [node, testing]
+tags: [testing, junior]
+toc: true
 ---
-
-**Tabla de contenidos**
-* TOC
-{:toc}
 
 Ya tenemos los primeros tests generados, vamos con algunos de los pasos adicionales que
 comentamos en la parte final de capítulo anterior.
@@ -38,7 +36,7 @@ busquemos).
 
 Modificaremos los tests del User model para añadir esta característica:
 
-{% highlight javascript %}
+```javascript
 const { v4: createUuid } = require('uuid')
 const { User } = require('../../../src/models')
 const { InvalidArgumentException } = require('../../../src/exceptions')
@@ -55,22 +53,22 @@ describe('User Model', function () {
         { username: 'example@gmailcom' },
         { username: 'example+test@domingollanes._me' },
     ]
-    
+
     it.each(validUserNames)(
       'should return an instance of User with username %s',
         (username) => {
             const user = User.create(createUuid(), username, '123456')
-    
+
             expect(user).toBeInstanceOf(User)
         })
-    
+
     it.each(invalidUserNames)(
       'should throw an InvalidArgumentException error if username is $username',
         ({ username }) => {
             expect(
                 () => { User.create(createUuid(), username, '123456') }).
                     toThrow(InvalidArgumentException)
-    
+
             try {
                 User.create(createUuid(), username, '123456')
             } catch (error) {
@@ -78,7 +76,7 @@ describe('User Model', function () {
             }
         })
 })
-{% endhighlight %}
+```
 
 Como podemos ver, todo el peso de esta funcionalidad recae sobre la función
 `it.each(variable)`, que se encarga de iterar sobre el array generado.
@@ -95,7 +93,7 @@ se utilizaría `%s` dentro del texto del nombre del test.
 Si vemos la ejecución de los tests, podemos observar que en el nombre del test
 aparece el parámetro para el que se está ejecutando:
 
-{% highlight bash %}
+```shell
 $ npm run test -- tests/models/user/user.spec.js
 
 > 01_express_testing@1.0.0 test
@@ -115,7 +113,7 @@ Tests:       6 passed, 6 total
 Snapshots:   0 total
 Time:        0.442 s, estimated 1 s
 Ran all test suites matching /tests\/models\/user\/user.spec.js/i.
-{% endhighlight %}
+```
 
 ## Introducir [Faker][faker-js]{:target="_blank"}
 
@@ -125,16 +123,16 @@ acelerar el proceso de tests y ser agnósticos a los datos que nos llegan.
 
 Para ello vamos a instalar la librería:
 
-{% highlight bash %}
+```shell
 $ npm install --save-dev @faker-js/faker
-{% endhighlight %}
+```
 
 Una vez instalado, vamos a añadirlo a uno de los tests de los controladores:
 
 NOTA: voy a exponer únicamente el código que ha sido modificado, ya que las líneas
 que cambian son pocas.
 
-{% highlight javascript %}
+```javascript
 const { faker } = require('@faker-js/faker')
 ...
 
@@ -145,20 +143,20 @@ describe('UserCreateController', function () {
             password = faker.internet.password()
         ...
     })
-    
+
     it('should return error 422 if not valid data', function () {
         const username = faker.random.word(),
             password = faker.internet.password()
         ...
     })
-    
+
     it('should return error 500 if save fails', function () {
         const username = faker.internet.email(),
             password = faker.internet.password()
         ...
     })
 })
-{% endhighlight %}
+```
 
 Ahora el `username` y el `password` serán generados automáticamente a través
 de la librería y no tenemos que preocuparnos de los valores.
@@ -172,7 +170,7 @@ palabra, no será un email válido, ya que no contiene `@`, por ejemplo.
 
 Con estos cambios, podemos volver a ejecutar los tests y ver los resultados:
 
-{% highlight bash %}
+```shell
 $ npm run test -- tests/controllers/users/create.controller.spec.js
 
 > 01_express_testing@1.0.0 test
@@ -189,7 +187,7 @@ Tests:       3 passed, 3 total
 Snapshots:   0 total
 Time:        2.22 s
 Ran all test suites matching /tests\/controllers\/users\/create.controller.spec.js/i.
-{% endhighlight %}
+```
 
 ## Conclusión
 

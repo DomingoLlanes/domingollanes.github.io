@@ -2,43 +2,41 @@
 layout: post
 title:  "Testing con Jest II"
 date:   2022-11-16 19:00:49 +0100
-categories: testing node jest
+categories: [node, testing]
+toc: true
+tags: [testing, junior]
 ---
 
-**Tabla de contenidos**
-* TOC
-{:toc}
-
-En la [primera parte][testing-with-jest-i]{:target="_blank"} desarrollamos el primer test, para el modelo User, ahora 
+En la [primera parte][testing-with-jest-i]{:target="_blank"} desarrollamos el primer test, para el modelo User, ahora
 vamos a por los controladores.
 
-En este caso, el repositorio de usuarios es más complicado de testear debido a que, por simplicidad, está acoplado a los 
-datos. Por otro lado, también por motivos de simplicidad, la respuesta de los mismos también está acoplada (en este caso 
+En este caso, el repositorio de usuarios es más complicado de testear debido a que, por simplicidad, está acoplado a los
+datos. Por otro lado, también por motivos de simplicidad, la respuesta de los mismos también está acoplada (en este caso
 a la interfaz de entrada, que es esa API que hemos creado).
 
 Así que, ¡vamos a ello!
 
 ## Testing de controllers: UserCreateController
 
-Lo primero que tenemos que hacer para crear estos tests es crear los **mocks** necesarios, es decir, vamos a simular los 
+Lo primero que tenemos que hacer para crear estos tests es crear los **mocks** necesarios, es decir, vamos a simular los
 servicios de los que dependen los controllers para poder acotar el ámbito de pruebas.
 
-Estos mocks nos van a permitir aislar aquellos puntos que no queremos verificar en nuestros tests, permitiendo crear 
-tests "concentrados" que realicen las pruebas unitarias sin tener que depender de un tercero para poder realizarlas. 
-Son muy utilizados en el testing y nos permiten, por ejemplo, realizar pruebas de un servicio que conecta con una API de 
+Estos mocks nos van a permitir aislar aquellos puntos que no queremos verificar en nuestros tests, permitiendo crear
+tests "concentrados" que realicen las pruebas unitarias sin tener que depender de un tercero para poder realizarlas.
+Son muy utilizados en el testing y nos permiten, por ejemplo, realizar pruebas de un servicio que conecta con una API de
 terceros sin tener que realizar una petición real a esa API.
 
 ### Mock del repositorio
 
-Para realizar un mock del repositorio tenemos que decirle a jest qué funciones tiene disponibles ese mock, para poder 
+Para realizar un mock del repositorio tenemos que decirle a jest qué funciones tiene disponibles ese mock, para poder
 probar después que esas funciones se han ejecutado.
 
-Esto se puede realizar automáticamente por [Jest][jest]{:target="_blank"}, pero lo vamos a hacer manualmente para 
+Esto se puede realizar automáticamente por [Jest][jest]{:target="_blank"}, pero lo vamos a hacer manualmente para
 ver de forma más sencilla y enteder mejor cómo funciona.
 
 Lo primero es crear la carpeta `tests/__mocks__/user`. Dentro de esta carpeta, crearemos el archivo `user-repository.mock.js`:
 
-{% highlight javascript %}
+```javascript
 module.exports = {
     save: jest.fn((user) => user),
     findById: jest.fn(() => {
@@ -49,7 +47,7 @@ module.exports = {
         }
     }),
 }
-{% endhighlight %}
+```
 
 Según vemos en el código, lo que nos interesa del `UserRepository` son las funciones:
 
@@ -69,9 +67,9 @@ Vamos a crear dos archivos dentro de la carpeta `tests/__mocks__/shared`:
 
 **api-request.mock.js**
 
-{% highlight javascript %}
+```javascript
 module.exports = (body) => ({ body })
-{% endhighlight %}
+```
 
 NOTA: Aunque parezca que esto podemos hacerlo en cualquier sitio, al crearlo en un archivo separado nos permite que,
 si más adelante necesitamos añadir cosas, podamos hacerlo en un archivo centralizado y no tener que ir modificando
@@ -79,17 +77,17 @@ cada aparición por todo el código.
 
 **api-response.mock.js**
 
-{% highlight javascript %}
+```javascript
 module.exports = () => {
     const res = {}
-    
+
     res.status = jest.fn().mockReturnValue(res)
     res.json = jest.fn().mockReturnValue(res)
     res.send = jest.fn().mockReturnValue(res)
-    
+
     return res
 }
-{% endhighlight %}
+```
 
 NOTA: Este mock es un poco particular debido a que, por cómo funciona Express, las distintas funciones se van ejecutando
 de forma encadenada, por lo que necesitamos que cada función mockeada devuelva otra vez el `res`.
@@ -106,7 +104,7 @@ En nuestro caso, vamos a verificar tres casos de uso:
 
 Para esto, vamos a crear el archivo `tests/controllers/users/create.controller.spec.js`:
 
-{% highlight javascript %}
+```javascript
 const { UserCreateController } = require('../../../src/controllers')
 const { PasswordEncrypter } = require('../../../src/utils')
 
@@ -119,25 +117,25 @@ const apiResponseMock = require(
 
 describe('UserCreateController', function () {
     const passwordEncrypter = new PasswordEncrypter()
-    
+
     beforeEach(() => {
         userRepositoryMock.save.mockClear()
     })
-    
+
     it('should return user if valid data', function () {
         const username = 'info@domingollanes.me',
         password = '123456'
-    
+
         const controller = new UserCreateController(userRepositoryMock,
           passwordEncrypter)
-    
+
         const hashedPassword = passwordEncrypter.encrypt(password)
-    
+
         const requestMock = apiRequestMock({ username, password })
         const responseMock = apiResponseMock()
-    
+
         controller.execute(requestMock, responseMock)
-    
+
         expect(controller).toBeDefined()
         expect(userRepositoryMock.save).toBeCalledTimes(1)
         expect(userRepositoryMock.save).
@@ -153,19 +151,19 @@ describe('UserCreateController', function () {
           toBeCalledWith(
             expect.objectContaining({ username, password: hashedPassword }))
     })
-    
+
     it('should return error 422 if not valid data', function () {
         const username = 'infodomingollanes.me',
         password = '123456'
-    
+
         const controller = new UserCreateController(userRepositoryMock,
           passwordEncrypter)
-    
+
         const requestMock = apiRequestMock({ username, password })
         const responseMock = apiResponseMock()
-    
+
         controller.execute(requestMock, responseMock)
-    
+
         expect(controller).toBeDefined()
         expect(userRepositoryMock.save).not.toBeCalled()
         expect(responseMock.status).toBeCalledTimes(1)
@@ -175,23 +173,23 @@ describe('UserCreateController', function () {
           toBeCalledWith(
             expect.objectContaining({ error: expect.any(String) }))
     })
-    
+
     it('should return error 500 if save fails', function () {
     const username = 'info@domingollanes.me',
     password = '123456'
-    
+
         const errorUserRepositoryMock = userRepositoryMock
         errorUserRepositoryMock.save.mockImplementationOnce(
           () => {throw new Error()})
-    
+
         const controller = new UserCreateController(errorUserRepositoryMock,
           passwordEncrypter)
-    
+
         const requestMock = apiRequestMock({ username, password })
         const responseMock = apiResponseMock()
-    
+
         controller.execute(requestMock, responseMock)
-    
+
         expect(controller).toBeDefined()
         expect(responseMock.status).toBeCalledTimes(1)
         expect(responseMock.status).toBeCalledWith(500)
@@ -202,11 +200,11 @@ describe('UserCreateController', function () {
           })
     })
 })
-{% endhighlight %}
+```
 
 Una vez lo tenemos, lanzamos los tests para verificar que todo está funcionando correctamente.
 
-{% highlight bash %}
+```shell
 $ npm run test
 
 > 01_express_testing@1.0.0 test
@@ -220,13 +218,13 @@ Tests:       5 passed, 5 total
 Snapshots:   0 total
 Time:        0.26 s, estimated 1 s
 Ran all test suites.
-{% endhighlight %}
+```
 
 Y ahora vamos a ir desgranando un poco cada punto clave:
 
 #### Mock Clear de mock de UserRepository
 
-{% highlight javascript %}
+```javascript
 describe('UserCreateController', function () {
     // ...
     beforeEach(() => {
@@ -234,7 +232,7 @@ describe('UserCreateController', function () {
     })
     // ...
 })
-{% endhighlight %}
+```
 
 Antes de cada uno de los tests (es decir, de cada `it`), debe limpiarse el mock, para evitar que las ejecuciones
 anteriores alteren el resultado de los tests posteriores.
@@ -246,7 +244,7 @@ en este caso lo hemos realizado manualmente para poder remarcarlo después.
 
 Como se puede ver hay bastantes `expect` en cada uno de los tests, vamos a revisar algunos y por qué están ahí.
 
-{% highlight javascript %}
+```javascript
 describe('UserCreateController', function () {
     // ...
     it('should return user if valid data', function () {
@@ -263,7 +261,7 @@ describe('UserCreateController', function () {
         expect(responseMock.status).toBeCalledWith(201)
         // ...
     })
-    
+
     it('should return error 422 if not valid data', function () {
         // ...
         expect(userRepositoryMock.save).not.toBeCalled()
@@ -271,7 +269,7 @@ describe('UserCreateController', function () {
     })
     // ...
 })
-{% endhighlight %}
+```
 
 **expect(...).toBeDefined()**
 
@@ -300,7 +298,7 @@ Mismo caso que el expect anterior, pero en este caso se comprueba que la funció
 
 #### La preparación de los datos y mocks necesarios para el test
 
-{% highlight javascript %}
+```javascript
     const username = 'info@domingollanes.me',
     password = '123456' // el usuario y contraseña que vamos a usar
 
@@ -309,13 +307,13 @@ Mismo caso que el expect anterior, pero en este caso se comprueba que la funció
 
     const hashedPassword = passwordEncrypter.encrypt(password)  // como las contraseñas están hasheadas,
                                                                 // necesitamos pasarle ese encrypter
-                                                                // a la que hemos creado 
+                                                                // a la que hemos creado
 
     const requestMock = apiRequestMock({ username, password })  // instanciamos el mock de la Request
     const responseMock = apiResponseMock()                      // instanciamos el mock de la Response
 
     controller.execute(requestMock, responseMock)               // lanzamos la ejecución del controller
-{% endhighlight %}
+```
 
 ## Testing de controllers: UserGetController
 
@@ -330,7 +328,7 @@ Para este controller, vamos a verificar tres casos de uso:
 
 Creamos el archivo `tests/controllers/users/get.controller.spec.js`:
 
-{% highlight javascript %}
+```javascript
 const { UserGetController } = require(
 '../../../src/controllers')
 
@@ -346,17 +344,17 @@ describe('UserGetController', function () {
     beforeEach(() => {
         userRepositoryMock.findById.mockClear()
     })
-    
+
     it('should return user if id exists', function () {
         const id = 'e1d8cb2c-fd15-4809-a261-14530dab7915'
-    
+
         const controller = new UserGetController(userRepositoryMock)
-    
+
         const requestMock = apiRequestMock(null, { id })
         const responseMock = apiResponseMock()
-    
+
         controller.execute(requestMock, responseMock)
-    
+
         expect(controller).toBeDefined()
         expect(userRepositoryMock.findById).toBeCalledTimes(1)
         expect(userRepositoryMock.findById).
@@ -371,41 +369,41 @@ describe('UserGetController', function () {
           toBeCalledWith(
             expect.objectContaining({ id }))
     })
-    
+
     it('should return error 404 if not valid data', function () {
         const id = 'e1d8cb2c-fd15-4809-a261-14530dab7915'
-    
+
         const errorUserRepositoryMock = userRepositoryMock
         errorUserRepositoryMock.findById.mockImplementationOnce(
           () => {throw new UserNotFoundException()})
-    
+
         const controller = new UserGetController(errorUserRepositoryMock)
-    
+
         const requestMock = apiRequestMock(null, { id })
         const responseMock = apiResponseMock()
-    
+
         controller.execute(requestMock, responseMock)
-    
+
         expect(controller).toBeDefined()
         expect(responseMock.status).toBeCalledTimes(1)
         expect(responseMock.status).toBeCalledWith(404)
         expect(responseMock.send).toBeCalledTimes(1)
     })
-    
+
     it('should return error 500 if findById fails', function () {
         const id = 'e1d8cb2c-fd15-4809-a261-14530dab7915'
-    
+
         const errorUserRepositoryMock = userRepositoryMock
         errorUserRepositoryMock.findById.mockImplementationOnce(
           () => {throw new Error()})
-    
+
         const controller = new UserGetController(errorUserRepositoryMock)
-    
+
         const requestMock = apiRequestMock(null, { id })
         const responseMock = apiResponseMock()
-    
+
         controller.execute(requestMock, responseMock)
-    
+
         expect(controller).toBeDefined()
         expect(responseMock.status).toBeCalledTimes(1)
         expect(responseMock.status).toBeCalledWith(500)
@@ -416,11 +414,11 @@ describe('UserGetController', function () {
           })
     })
 })
-{% endhighlight %}
+```
 
 Lanzamos de nuevo los tests.
 
-{% highlight bash %}
+```shell
 $ npm run test
 
 > 01_express_testing@1.0.0 test
@@ -435,15 +433,15 @@ Tests:       8 passed, 8 total
 Snapshots:   0 total
 Time:        0.347 s, estimated 1 s
 Ran all test suites.
-{% endhighlight %}
+```
 
 ### Modificaciones necesarias para generar estos tests: El mock de Request
 
 En este caso, como necesitamos el atributo `params` del Request, lo tenemos que añadir al mock que ya teníamos:
 
-{% highlight javascript %}
+```javascript
 module.exports = (body, params) => ({ body, params })
-{% endhighlight %}
+```
 
 ## Conclusión
 

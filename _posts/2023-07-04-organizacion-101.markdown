@@ -2,12 +2,10 @@
 layout: post
 title:  "Organización 101"
 date:   2023-07-04 10:00:00 +0100
-categories: trello notion organización comunicación
+categories: [organización]
+toc: true
+tags: [organización, trello, notion, junior]
 ---
-
-**Tabla de contenidos**
-* TOC
-{:toc}
 
 **Organización**, este es uno de los puntos más clave que tienes que ir aprendiendo
 si estás empezando a programar o ya sabes programar y quieres pegar un salto de nivel
