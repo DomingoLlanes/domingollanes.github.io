@@ -205,5 +205,5 @@ El código completo se puede ver [aquí][example-testing-repository]{:target="_b
 [example-testing-repository]: https://github.com/DomingoLlanes/domingollanes.github.io-examples/tree/main/01_express_testing
 [faker-js]: https://www.npmjs.com/package/@faker-js/faker
 
-[testing-with-jest-i]: /posts/testing-con-jest-i.html
-[testing-with-jest-ii]: /posts/testing-con-jest-ii.html
+[testing-with-jest-i]: /posts/testing-con-jest-i/
+[testing-with-jest-ii]: /posts/testing-con-jest-ii/
