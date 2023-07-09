@@ -4,7 +4,9 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-Desarrollador de aplicaciones.
+Senior Software Engineer.
+
+*Acelerando perfiles desde hace más de 5 años*
 
 Puedes obtener más información en
 [GitHub][github]
