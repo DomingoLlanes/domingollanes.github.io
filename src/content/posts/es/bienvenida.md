@@ -1,7 +1,7 @@
 ---
 title: "Bienvenido a IA local, LLMs y aprendizaje"
 description: "IA en local, herramientas, noticias, conceptos y aprendizaje, base de conocimiento personal y pruebas con IA. Sin nube, con tu PC."
-pubDate: 2026-06-24
+pubDate: 2026-06-17
 pinned: true
 toc: false
 tags: [bienvenida]
