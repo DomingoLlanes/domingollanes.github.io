@@ -93,6 +93,7 @@ export async function getPosts(locale: Locale): Promise<Post[]> {
   if (skipPostCollections) return [];
   const all = await getCollection('posts', (entry) => {
     if (isProd && entry.data.draft) return false;
+    if (isProd && entry.data.pubDate > new Date()) return false; // ponytail: scheduled posts hidden in prod, visible in dev for preview
     if (entry.data.unlisted) return false;
     const lang = entry.data.lang ?? localeFromId(entry.id);
     return lang === locale;
