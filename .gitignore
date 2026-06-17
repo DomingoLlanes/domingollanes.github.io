@@ -1,22 +1,42 @@
-# Bundler cache
-.bundle
-vendor
-Gemfile.lock
+# build output
+dist/
+.output/
+.vercel/
+.netlify/
 
-# Jekyll cache
-.jekyll-cache
-_site
+# generated types
+.astro/
 
-# RubyGems
-*.gem
+# dependencies
+node_modules/
 
-# NPM dependencies
-node_modules
-package-lock.json
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# IDE configurations
-.idea
-.vscode
+# environment variables
+.env
+.env.local
+.env.production
+.env.development
 
-# Misc
-assets/js/dist
+# editor
+.idea/
+
+# os
+.DS_Store
+Thumbs.db
+
+# bun
+bun.lockb
+.bun-cache/
+
+# pagefind cache
+pagefind/
+
+# misc
+*.log
+
+bash.exe*
