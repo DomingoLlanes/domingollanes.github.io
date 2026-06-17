@@ -1,6 +1,6 @@
 ---
-title: Política de Privacidad
-description: Política de privacidad de IA local, LLMs y aprendizaje: qué datos personales tratamos (logs del servidor y preferencia de tema), base jurídica del RGPD y cómo ejercer tus derechos.
+title: "Política de Privacidad"
+description: "Política de privacidad de IA local, LLMs y aprendizaje: qué datos personales tratamos (logs del servidor y preferencia de tema), base jurídica del RGPD y cómo ejercer tus derechos."
 translationKey: privacy
 ---
 
