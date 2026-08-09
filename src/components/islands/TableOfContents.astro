@@ -1,16 +1,11 @@
 ---
 /**
- * Sticky TOC with scroll-spy.
+ * Sticky lateral TOC with scroll-spy, ai-blog style: numbered items with
+ * a left border that turns accent when the section is active.
  *
- * Renders Astro's `headings` array (H2..H4) and highlights the active
- * entry based on viewport intersection. Behavior:
- *
- *  - H2 entries are ALWAYS visible.
+ *  - H2 entries are always visible and numbered (01, 02, …).
  *  - H3 / H4 entries are hidden by default and only revealed for the
- *    currently active H2 section (computed at render time: each child
- *    item carries `data-toc-parent="<slug-of-its-H2>"`).
- *  - The active H2 is the most recent H2 above (or containing) the
- *    currently visible heading reported by IntersectionObserver.
+ *    currently active H2 section (each child carries `data-toc-parent`).
  */
 import { useTranslations } from '../../i18n/utils';
 import type { Locale } from '../../config';
@@ -25,44 +20,62 @@ const { headings, locale } = Astro.props;
 const t = useTranslations(locale);
 const items = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 
-// Pre-compute the "parent H2" slug for every item. For depth=2 it is the
-// item's own slug; for depth=3/4 it is the most recent depth=2 slug
-// encountered while iterating in document order.
 let currentH2: string | undefined;
+let h2Count = 0;
 const decorated = items.map((h) => {
-  if (h.depth === 2) currentH2 = h.slug;
-  return { ...h, parent: h.depth === 2 ? h.slug : (currentH2 ?? h.slug) };
+  if (h.depth === 2) {
+    currentH2 = h.slug;
+    h2Count++;
+  }
+  return { ...h, parent: h.depth === 2 ? h.slug : (currentH2 ?? h.slug), num: h2Count };
 });
 ---
 
 {
   items.length > 0 && (
-    <nav
-      aria-labelledby="toc-heading"
-      class="toc sticky top-20 hidden max-h-[calc(100vh-6rem)] overflow-y-auto pr-2 text-sm xl:block"
-    >
-      <h2
-        id="toc-heading"
-        class="text-base-content/60 mb-3 text-xs font-semibold tracking-wide uppercase"
-      >
-        {t('post.toc')}
-      </h2>
-      <ol class="toc-list space-y-1">
-        {decorated.map((h) => (
-          <li class={`toc-level-${h.depth}`} data-toc-parent={h.parent}>
-            <a href={`#${h.slug}`} data-toc-link={h.slug} data-toc-depth={h.depth}>
-              {h.text}
-            </a>
-          </li>
-        ))}
-      </ol>
+    <nav aria-labelledby="toc-heading" class="ai-toc">
+      <div class="ai-toc__list">
+        <h2
+          id="toc-heading"
+          class="mb-3 text-xs font-semibold tracking-[0.18em] uppercase"
+          style="color:var(--color-ink);font-family:var(--font-mono)"
+        >
+          {t('post.toc')}
+        </h2>
+        <ol>
+          {decorated.map((h) => (
+            <li class={`toc-level-${h.depth}`} data-toc-parent={h.parent}>
+              <a
+                href={`#${h.slug}`}
+                data-toc-link={h.slug}
+                data-toc-depth={h.depth}
+                class="ai-toc__item"
+              >
+                {h.depth === 2 && <span class="ai-toc__num">{String(h.num).padStart(2, '0')}</span>}
+                <span>{h.text}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
     </nav>
   )
 }
 
+<style>
+  .toc-level-3,
+  .toc-level-4 {
+    display: none;
+  }
+  .toc-level-3[data-section-active='true'],
+  .toc-level-4[data-section-active='true'] {
+    display: list-item;
+  }
+</style>
+
 <script>
   function initSmartToc() {
-    const root = document.querySelector<HTMLElement>('.toc');
+    const root = document.querySelector<HTMLElement>('.ai-toc');
     if (!root) return;
     const links = root.querySelectorAll<HTMLAnchorElement>('[data-toc-link]');
     if (!links.length) return;
@@ -75,7 +88,6 @@ const decorated = items.map((h) => {
       if (id) linkBySlug.set(id, a);
     });
 
-    // Map slug -> parent H2 slug (for child entries) for quick lookups.
     const parentBySlug = new Map<string, string>();
     items.forEach((li) => {
       const a = li.querySelector<HTMLAnchorElement>('[data-toc-link]');
@@ -111,7 +123,6 @@ const decorated = items.map((h) => {
       });
     }
 
-    // Default: open the first section before any scroll happens.
     if (headingEls.length) setActiveSection(headingEls[0].id);
 
     const observer = new IntersectionObserver(

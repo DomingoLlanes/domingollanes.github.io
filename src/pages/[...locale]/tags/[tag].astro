@@ -39,13 +39,13 @@ const posts = (await getPosts(locale)).filter((p) => p.data.tags.some((tg) => sl
     { label: `#${tagName}` },
   ]}
 >
-  <header class="mb-6">
-    <p class="text-base-content/70 text-sm tracking-wide uppercase">{t('list.tagPosts')}</p>
-    <h1 class="text-3xl font-bold tracking-tight">#{tagName}</h1>
-    <p class="text-base-content/70 mt-1 text-sm">
+  <div class="ai-page-heading mb-10">
+    <p class="ai-page-kicker">{t('list.tagPosts')}</p>
+    <h1 class="ai-page-title">#{tagName}</h1>
+    <p class="ai-page-meta">
       {posts.length}
       {posts.length === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
     </p>
-  </header>
+  </div>
   <PostList posts={posts} locale={locale} />
 </BaseLayout>

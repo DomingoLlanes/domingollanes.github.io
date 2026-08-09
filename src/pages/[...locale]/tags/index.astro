@@ -22,20 +22,20 @@ const tags = await getTagsWithCount(locale);
   pathWithoutLocale="/tags/"
   crumbs={[{ label: t('tags.title') }]}
 >
-  <header class="mb-6">
-    <h1 class="text-3xl font-bold tracking-tight">{t('tags.title')}</h1>
-  </header>
+  <div class="ai-page-heading mb-10">
+    <h1 class="ai-page-title">{t('tags.title')}</h1>
+  </div>
   {
     tags.length === 0 ? (
-      <p class="text-base-content/70">{t('tags.empty')}</p>
+      <p class="ai-empty">{t('tags.empty')}</p>
     ) : (
       <ul class="flex flex-wrap gap-2">
         {tags.map((tag) => (
           <li>
-            <a href={tagPath(locale, tag.name)} class="badge badge-lg gap-1">
+            <a href={tagPath(locale, tag.name)} class="ai-tag gap-1">
               <Icon name="lucide:tag" width={12} height={12} />
               {tag.name}
-              <span class="text-base-content/70">{tag.count}</span>
+              <span style="color:var(--color-muted)">{tag.count}</span>
             </a>
           </li>
         ))}

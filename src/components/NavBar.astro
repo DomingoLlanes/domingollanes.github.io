@@ -1,0 +1,71 @@
+---
+/**
+ * ai-blog horizontal navbar: brand | nav links | actions (search pill,
+ * subscribe, theme toggle). Replaces the chirpy fixed sidebar + topbar.
+ */
+import { SITE, NAV, type Locale } from '../config';
+import { useTranslations, localizedPath } from '../i18n/utils';
+import type { UIKey } from '../i18n/ui';
+import { Icon } from 'astro-icon/components';
+import SearchButton from './islands/SearchButton.astro';
+import ThemeToggle from './islands/ThemeToggle.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const home = localizedPath('/', locale);
+
+const navItems = NAV.map((item) => ({
+  ...item,
+  href: localizedPath(item.href, locale),
+  label: t(`nav.${item.key}` as UIKey),
+}));
+---
+
+<header class="ai-nav" aria-label="Navigation">
+  <div class="ai-shell">
+    <div class="ai-nav__inner">
+      {/* Brand */}
+      <a href={home} class="ai-brand" aria-label={SITE.title}>
+        <span class="ai-brand__mark" aria-hidden="true">
+          <Icon name="lucide:sparkles" width={15} height={15} />
+        </span>
+        <span class="ai-brand__name">{SITE.title}</span>
+      </a>
+
+      {/* Links */}
+      <nav class="ai-nav__links" aria-label="Main">
+        {navItems.map((item) => {
+          const stripped = item.href.replace(/\/+$/, '') || '/';
+          const current = Astro.url.pathname.replace(/\/+$/, '') || '/';
+          const isActive =
+            stripped === current ||
+            (stripped !== home.replace(/\/+$/, '') && current.startsWith(stripped + '/'));
+          return (
+            <a
+              href={item.href}
+              aria-current={isActive ? 'page' : undefined}
+              class="ai-nav-link"
+            >
+              <span class="ai-nav-dot" aria-hidden="true" />
+              {item.label}
+            </a>
+          );
+        })}
+      </nav>
+
+      {/* Actions */}
+      <div class="ai-nav__actions">
+        <SearchButton locale={locale} />
+        {/* Hidden: no subscription target on this blog yet. */}
+        {/* <a href={localizedPath('/rss.xml', locale)} class="ai-btn ai-btn-soft px-4 py-2">
+          {t('nav.subscribe')}
+        </a> */}
+        <ThemeToggle locale={locale} />
+      </div>
+    </div>
+  </div>
+</header>

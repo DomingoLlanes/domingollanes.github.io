@@ -1,0 +1,65 @@
+---
+/**
+ * "Los conceptos, sin fórmulas" band: three linked concept cards derived
+ * from the top categories of the blog, with curated one-line descriptions.
+ */
+import type { Locale } from '../config';
+import { useTranslations } from '../i18n/utils';
+import { getCategoriesWithCount, categoryPath, slugify } from '../utils/posts';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const categories = (await getCategoriesWithCount(locale)).slice(0, 3);
+
+const DESCRIPTIONS: Record<string, string> = {
+  conceptos: 'Explicados desde cero: qué es, para qué sirve y un ejemplo que se entiende.',
+  noticias: 'Lo que se mueve en la IA y por qué debería importarte.',
+  pruebas: 'Resultados de experimentos reales con modelos locales: lo que funciona y lo que no.',
+  'ia-local': 'Ollama, runtimes y trucos para correr modelos en tu propia máquina.',
+  suscripciones: 'Lo que vale la pena pagar y lo que no, medido con datos.',
+};
+---
+
+{
+  categories.length > 0 && (
+    <section class="pt-20 lg:pt-24" aria-label={t('home.conceptsTitle')}>
+      <header class="mb-10 flex flex-col gap-4 lg:mb-12">
+        <p class="ai-kicker">
+          <span class="ai-kicker__dot" aria-hidden="true" />
+          {t('home.conceptsKicker')}
+        </p>
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+          <h2 class="ai-display max-w-md text-4xl sm:text-5xl">{t('home.conceptsTitle')}</h2>
+          <p class="ai-sub max-w-xl text-base">{t('home.conceptsSub')}</p>
+        </div>
+      </header>
+
+      <div
+        class:list={[
+          'grid grid-cols-1 gap-5',
+          categories.length > 1 ? 'md:grid-cols-2' : '',
+          categories.length > 2 ? 'lg:grid-cols-3' : '',
+          categories.length > 2 ? 'lg:max-w-none' : 'lg:max-w-3xl',
+        ]}
+      >
+        {categories.map((cat, i) => (
+          <a href={categoryPath(locale, cat.name)} class="ai-concept block">
+            <span class="ai-concept__grad" aria-hidden="true" />
+            <span class="ai-concept__index">{String(i + 1).padStart(2, '0')}</span>
+            <span class="ai-concept__title">{cat.name}</span>
+            <span class="ai-concept__desc line-clamp-3">
+              {DESCRIPTIONS[slugify(cat.name)] ?? cat.name}
+            </span>
+            <span class="ai-concept__time">
+              {cat.count} {cat.count === 1 ? t('list.totalPostsOne') : t('list.totalPosts')}
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}

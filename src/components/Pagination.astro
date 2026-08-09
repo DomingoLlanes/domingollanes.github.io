@@ -35,33 +35,38 @@ if (lastPage > 1) push(lastPage);
 
 <nav
   aria-label={`${t('pagination.page')} ${currentPage} ${t('pagination.of')} ${lastPage}`}
-  class="my-10 flex items-center justify-between"
+  class="my-10 flex items-center justify-between gap-3"
 >
   {
     prev ? (
-      <a rel="prev" href={prev} class="btn btn-sm btn-ghost gap-1">
-        <Icon name="lucide:arrow-up" width={14} height={14} class="-rotate-90" />
+      <a rel="prev" href={prev} class="ai-btn ai-btn-outline px-4 py-2">
+        <Icon name="lucide:arrow-left" width={14} height={14} />
         {t('pagination.previous')}
       </a>
     ) : (
-      <button disabled class="btn btn-sm btn-ghost pointer-events-none gap-1 opacity-40">
-        <Icon name="lucide:arrow-up" width={14} height={14} class="-rotate-90" />
+      <button disabled class="ai-btn ai-btn-outline pointer-events-none px-4 py-2 opacity-40">
+        <Icon name="lucide:arrow-left" width={14} height={14} />
         {t('pagination.previous')}
       </button>
     )
   }
 
-  <ul class="join">
+  <ul class="flex items-center gap-1.5">
     {
       numbers.map((n) =>
         n === '…' ? (
-          <li class="join-item btn btn-ghost btn-sm pointer-events-none">…</li>
+          <li class="px-1.5" style="color:var(--color-muted)">…</li>
         ) : (
           <li>
             <a
               href={hrefForPage(n)}
               aria-current={n === currentPage ? 'page' : undefined}
-              class:list={['join-item btn btn-sm', n === currentPage ? 'btn-primary' : 'btn-ghost']}
+              class:list={[
+                'inline-flex h-9 min-w-9 items-center justify-center rounded-full px-3 text-sm font-medium transition',
+                n === currentPage
+                  ? 'bg-ink text-surface'
+                  : 'ai-btn-outline',
+              ]}
             >
               {n}
             </a>
@@ -73,14 +78,14 @@ if (lastPage > 1) push(lastPage);
 
   {
     next ? (
-      <a rel="next" href={next} class="btn btn-sm btn-ghost gap-1">
+      <a rel="next" href={next} class="ai-btn ai-btn-outline px-4 py-2">
         {t('pagination.next')}
-        <Icon name="lucide:arrow-up" width={14} height={14} class="rotate-90" />
+        <Icon name="lucide:arrow-right" width={14} height={14} />
       </a>
     ) : (
-      <button disabled class="btn btn-sm btn-ghost pointer-events-none gap-1 opacity-40">
+      <button disabled class="ai-btn ai-btn-outline pointer-events-none px-4 py-2 opacity-40">
         {t('pagination.next')}
-        <Icon name="lucide:arrow-up" width={14} height={14} class="rotate-90" />
+        <Icon name="lucide:arrow-right" width={14} height={14} />
       </button>
     )
   }

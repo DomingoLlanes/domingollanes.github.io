@@ -1,4 +1,8 @@
 ---
+/**
+ * ai-blog prev/next navigation: two bordered cards with mono kicker
+ * ("← Anterior" / "Siguiente →") + Newsreader title.
+ */
 import type { Locale } from '../config';
 import { useTranslations } from '../i18n/utils';
 import { type Post, postPath } from '../utils/posts';
@@ -14,29 +18,20 @@ const { prev, next, locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 
-<nav
-  aria-label="Post navigation"
-  class="border-base-300 mt-10 grid gap-4 border-t pt-6 sm:grid-cols-2"
->
+<nav aria-label="Post navigation" class="ai-prevnext">
   {
     prev ? (
-      <a
-        href={postPath(prev)}
-        rel="prev"
-        class="card bg-base-200 hover:bg-base-300 transition-colors"
-      >
-        <div class="card-body">
-          <p class="text-base-content/70 text-xs tracking-wide uppercase">
-            <Icon
-              name="lucide:arrow-up"
-              width={12}
-              height={12}
-              class="inline -rotate-90 align-baseline"
-            />
-            {t('post.previous')}
-          </p>
-          <p class="font-semibold">{prev.data.title}</p>
-        </div>
+      <a href={postPath(prev)} rel="prev" class="ai-prevnext__card">
+        <p class="ai-prevnext__kicker">
+          <Icon
+            name="lucide:arrow-left"
+            width={12}
+            height={12}
+            class="inline align-baseline"
+          />
+          {t('post.previous')}
+        </p>
+        <p class="ai-prevnext__title line-clamp-2">{prev.data.title}</p>
       </a>
     ) : (
       <span aria-hidden="true" class="hidden sm:block" />
@@ -48,20 +43,18 @@ const t = useTranslations(locale);
       <a
         href={postPath(next)}
         rel="next"
-        class="card bg-base-200 hover:bg-base-300 transition-colors sm:text-right"
+        class="ai-prevnext__card sm:text-right"
       >
-        <div class="card-body">
-          <p class="text-base-content/70 text-xs tracking-wide uppercase">
-            {t('post.next')}
-            <Icon
-              name="lucide:arrow-up"
-              width={12}
-              height={12}
-              class="inline rotate-90 align-baseline"
-            />
-          </p>
-          <p class="font-semibold">{next.data.title}</p>
-        </div>
+        <p class="ai-prevnext__kicker">
+          {t('post.next')}
+          <Icon
+            name="lucide:arrow-right"
+            width={12}
+            height={12}
+            class="inline align-baseline"
+          />
+        </p>
+        <p class="ai-prevnext__title line-clamp-2">{next.data.title}</p>
       </a>
     ) : (
       <span aria-hidden="true" class="hidden sm:block" />

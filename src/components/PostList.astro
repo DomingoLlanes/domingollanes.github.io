@@ -7,21 +7,22 @@ import PostCard from './PostCard.astro';
 interface Props {
   posts: Post[];
   locale: Locale;
+  /** When true, hides the empty state border and shows nothing. */
+  silent?: boolean;
 }
 
-const { posts, locale } = Astro.props;
+const { posts, locale, silent = false } = Astro.props;
 const t = useTranslations(locale);
+const total = posts.length;
 ---
 
 {
   posts.length === 0 ? (
-    <p class="border-base-300 text-base-content/70 rounded-md border border-dashed px-6 py-10 text-center">
-      {t('list.empty')}
-    </p>
+    !silent && <p class="ai-empty">{t('list.empty')}</p>
   ) : (
-    <div id="post-list">
+    <div id="post-list" class="flex flex-col">
       {posts.map((post, index) => (
-        <PostCard post={post} locale={locale} prioritizeLcp={index === 0} />
+        <PostCard post={post} locale={locale} index={index} total={total} />
       ))}
     </div>
   )

@@ -218,9 +218,9 @@ export default defineConfig({
       themes: ['github-light', 'github-dark-dimmed'],
       // Bind the active theme to our `<html data-theme>` attribute instead
       // of the default `prefers-color-scheme` media query so the theme
-      // toggle in the sidebar takes effect immediately.
+      // toggle in the navbar takes effect immediately.
       themeCssSelector: (theme) =>
-        `[data-theme='${theme.type === 'dark' ? 'chirpy-dark' : 'chirpy-light'}']`,
+        `[data-theme='${theme.type === 'dark' ? 'ai-blog-dark' : 'ai-blog-light'}']`,
       useDarkModeMediaQuery: false,
       shiki: {
         langAlias: {
@@ -361,6 +361,105 @@ export default defineConfig({
             style: 'normal',
             src: [
               './node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-600-normal.woff2',
+            ],
+          },
+        ],
+      },
+    },
+    // Newsreader — display font for the ai-blog theme
+    {
+      name: 'Newsreader',
+      cssVariable: '--font-newsreader',
+      provider: fontProviders.local(),
+      options: {
+        variants: [
+          {
+            weight: '400',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/newsreader/files/newsreader-latin-400-normal.woff2',
+            ],
+          },
+          {
+            weight: '500',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/newsreader/files/newsreader-latin-500-normal.woff2',
+            ],
+          },
+          {
+            weight: '500',
+            style: 'italic',
+            src: [
+              './node_modules/@fontsource/newsreader/files/newsreader-latin-500-italic.woff2',
+            ],
+          },
+          {
+            weight: '600',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/newsreader/files/newsreader-latin-600-normal.woff2',
+            ],
+          },
+        ],
+      },
+    },
+    // Inter — body font for the ai-blog theme
+    {
+      name: 'Inter',
+      cssVariable: '--font-inter',
+      provider: fontProviders.local(),
+      options: {
+        variants: [
+          {
+            weight: '400',
+            style: 'normal',
+            src: ['./node_modules/@fontsource/inter/files/inter-latin-400-normal.woff2'],
+          },
+          {
+            weight: '500',
+            style: 'normal',
+            src: ['./node_modules/@fontsource/inter/files/inter-latin-500-normal.woff2'],
+          },
+          {
+            weight: '600',
+            style: 'normal',
+            src: ['./node_modules/@fontsource/inter/files/inter-latin-600-normal.woff2'],
+          },
+          {
+            weight: '700',
+            style: 'normal',
+            src: ['./node_modules/@fontsource/inter/files/inter-latin-700-normal.woff2'],
+          },
+        ],
+      },
+    },
+    // IBM Plex Mono — monospace font for the ai-blog theme
+    {
+      name: 'IBM Plex Mono',
+      cssVariable: '--font-ibm-plex-mono',
+      provider: fontProviders.local(),
+      options: {
+        variants: [
+          {
+            weight: '400',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2',
+            ],
+          },
+          {
+            weight: '500',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2',
+            ],
+          },
+          {
+            weight: '600',
+            style: 'normal',
+            src: [
+              './node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2',
             ],
           },
         ],

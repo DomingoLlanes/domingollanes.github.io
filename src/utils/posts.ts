@@ -125,16 +125,13 @@ export async function getPostBySlug(locale: Locale, slug: string): Promise<Post 
 
 /** All translation siblings of a post (other locales sharing translationKey). */
 export async function getTranslations(entry: Post): Promise<Record<Locale, Post | undefined>> {
-  const out: Partial<Record<Locale, Post | undefined>> = {};
+  const out: Record<Locale, Post | undefined> = {} as Record<Locale, Post | undefined>;
   for (const locale of SITE.locales) {
-    if (locale === entry.data.lang) {
-      out[locale] = entry;
-      continue;
-    }
     const all = await getPosts(locale);
-    out[locale] = all.find((p) => p.data.translationKey === entry.data.translationKey);
+    const found = locale === entry.data.lang ? entry : all.find((p) => p.data.translationKey === entry.data.translationKey);
+    if (found) out[locale] = found;
   }
-  return out as Record<Locale, Post | undefined>;
+  return out;
 }
 
 /** Tags for a locale, with counts, sorted by count desc then alpha. */

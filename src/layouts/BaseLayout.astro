@@ -2,15 +2,13 @@
 import '../styles/global.css';
 
 import { Font } from 'astro:assets';
-import Sidebar from '../components/Sidebar.astro';
-import Topbar from '../components/Topbar.astro';
+import NavBar from '../components/NavBar.astro';
 import Footer from '../components/Footer.astro';
-import Panel from '../components/Panel.astro';
 import SEO from '../components/SEO.astro';
 import BackToTop from '../components/islands/BackToTop.astro';
 import { ClientRouter } from 'astro:transitions';
 import faviconImg from '../assets/images/site/favicon.png';
-import { SITE, type Locale } from '../config';
+import { SITE, THEME, type Locale } from '../config';
 import { detectLocale, htmlLang, useTranslations, stripLocale, withBase } from '../i18n/utils';
 import { buildSeo, type SeoMeta } from '../utils/seo';
 
@@ -24,8 +22,6 @@ interface Props {
   publishedTime?: Date;
   modifiedTime?: Date;
   tags?: string[];
-  /** Hide the right panel (e.g. on post pages where TOC takes its place). */
-  hidePanel?: boolean;
   /** Constrain main content width (used by Pages like About/404). */
   narrow?: boolean;
   /** Breadcrumb segments shown in the topbar. */
@@ -48,9 +44,7 @@ const {
   publishedTime,
   modifiedTime,
   tags,
-  hidePanel = false,
   narrow = false,
-  crumbs = [],
   seo,
   availableLocales,
 } = Astro.props;
@@ -78,13 +72,13 @@ const meta: SeoMeta =
 ---
 
 <!doctype html>
-<html lang={lang} data-theme="chirpy-light">
+<html lang={lang} data-theme={THEME.light}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7f8" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAF4E8" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#161210" />
     <link rel="icon" type="image/svg+xml" href={withBase(faviconImg.src)} />
     <link
       rel="alternate"
@@ -94,19 +88,22 @@ const meta: SeoMeta =
     />
     <SEO meta={meta} />
     {/* Custom fonts configured via Astro Fonts API */}
-    <Font cssVariable="--font-source-sans-3" />
-    <Font cssVariable="--font-lato" />
-    <Font cssVariable="--font-jetbrains-mono" preload />
+    <Font cssVariable="--font-newsreader" />
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-ibm-plex-mono" />
     <ClientRouter />
     {/* Apply persisted theme as early as possible to avoid FOUC. */}
-    <script is:inline>
+    <script
+      is:inline
+      define:vars={{ themeLight: THEME.light, themeDark: THEME.dark }}
+    >
       (function () {
         function applyTheme() {
           try {
             var stored = localStorage.getItem('theme');
             var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            var valid = stored === 'chirpy-dark' || stored === 'chirpy-light';
-            var theme = valid ? stored : prefersDark ? 'chirpy-dark' : 'chirpy-light';
+            var valid = stored === themeDark || stored === themeLight;
+            var theme = valid ? stored : prefersDark ? themeDark : themeLight;
             if (!valid && stored) localStorage.setItem('theme', theme);
             document.documentElement.setAttribute('data-theme', theme);
           } catch {
@@ -128,37 +125,24 @@ const meta: SeoMeta =
       {t('site.skipToContent')}
     </a>
 
-    <Sidebar locale={locale} />
+    <NavBar locale={locale} />
 
-    <div class="chirpy-main-wrapper">
-      <div class="chirpy-shell">
-        <Topbar locale={locale} crumbs={crumbs} availableLocales={availableLocales} />
-
-        <div class="flex flex-1 gap-10">
-          <div class="flex min-w-0 flex-1 flex-col">
-            <main
-              id="main"
-              aria-label="Main Content"
-              class:list={['min-w-0 flex-1 py-6 lg:pr-2', narrow ? 'mx-auto w-full max-w-3xl' : '']}
-            >
-              <slot />
-            </main>
-
-            <Footer locale={locale} />
-          </div>
-
-          {
-            !hidePanel && (
-              <aside class="chirpy-panel-rail" aria-label="Sidebar widgets">
-                <Panel locale={locale} />
-                <slot name="aside-bottom" />
-              </aside>
-            )
-          }
-        </div>
-      </div>
+    <div class="ai-shell">
+      <main
+        id="main"
+        aria-label="Main Content"
+        class:list={['min-w-0 flex-1 py-10 lg:py-12', narrow ? 'mx-auto w-full max-w-3xl' : '']}
+      >
+        <slot />
+      </main>
     </div>
+
+    <Footer locale={locale} />
 
     <BackToTop />
   </body>
 </html>
+
+<script is:inline define:vars={{ themeLight: THEME.light, themeDark: THEME.dark }}>
+  window.__aiTheme = { light: themeLight, dark: themeDark };
+</script>

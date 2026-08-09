@@ -1,0 +1,51 @@
+---
+/**
+ * Home hero: gradient orbs + mono kicker + Newsreader display title with
+ * a gradient accent line + editorial subtitle.
+ */
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+// Avoid orphaning the tail ("IA,") on its own line when the title wraps:
+// keep the last two words together as an unbreakable unit.
+const titleA = t('home.titleA');
+const words = titleA.split(' ');
+const titleAHead = words.length > 2 ? words.slice(0, -2).join(' ') : titleA;
+const titleATail = words.length > 2 ? words.slice(-2).join(' ') : '';
+---
+
+<section class="ai-hero" aria-label="Introducción">
+  <div
+    class="ai-hero__orb"
+    aria-hidden="true"
+    style="width:360px;height:360px;top:0;right:4%;background:radial-gradient(circle,#FF9A3D 0%,#FF5C39 55%,transparent 70%)"
+  ></div>
+  <div
+    class="ai-hero__orb"
+    aria-hidden="true"
+    style="width:240px;height:240px;top:190px;right:26%;background:radial-gradient(circle,#9B5CFF 0%,transparent 65%)"
+  ></div>
+
+  <div class="ai-hero__inner">
+    <p class="ai-kicker">
+      <span class="ai-kicker__dot" aria-hidden="true" />
+      {t('home.kicker')}
+    </p>
+
+    <h1 class="ai-display max-w-6xl text-5xl sm:text-6xl xl:text-[4.1rem]">
+      {titleAHead}
+      {titleATail && <span class="whitespace-nowrap"> {titleATail}</span>}
+      <br />
+      <span class="ai-grad-text">{t('home.titleB')}</span>
+    </h1>
+
+    <p class="ai-sub max-w-[41rem]">{t('home.subtitle')}</p>
+  </div>
+</section>

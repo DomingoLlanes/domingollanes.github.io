@@ -1,0 +1,48 @@
+---
+/**
+ * Newsletter band (ai-blog): gradient top bar + kicker + title + copy +
+ * email form + fine print.
+ */
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../config';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="pt-20 lg:pt-24" aria-label={t('home.newsletterTitle')}>
+  <div class="ai-newsletter">
+    <span class="ai-newsletter__grad" aria-hidden="true" />
+    <div class="flex flex-col gap-8 p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+      <div class="max-w-xl">
+        <p class="ai-kicker ai-kicker--accent mb-4">
+          <span class="ai-kicker__dot" aria-hidden="true" />
+          {t('home.newsletterKicker')}
+        </p>
+        <h2 class="ai-display mb-3 text-3xl sm:text-4xl">{t('home.newsletterTitle')}</h2>
+        <p class="ai-sub text-base">{t('home.newsletterCopy')}</p>
+      </div>
+
+      <form class="w-full max-w-md" action="/rss.xml" method="get">
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <input
+            type="email"
+            name="email"
+            required
+            class="ai-input"
+            placeholder={t('home.newsletterPlaceholder')}
+            aria-label={t('home.newsletterPlaceholder')}
+          />
+          <button type="submit" class="ai-btn ai-btn-primary shrink-0 px-6 py-3.5">
+            {t('nav.subscribe')}
+          </button>
+        </div>
+        <p class="ai-post-row__meta mt-3">{t('home.newsletterNote')}</p>
+      </form>
+    </div>
+  </div>
+</section>

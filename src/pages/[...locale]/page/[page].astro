@@ -44,15 +44,15 @@ const hrefForPage = (n: number) => localizedPath(n === 1 ? '/' : `/page/${n}/`, 
   title={`${t('list.allPosts')} — ${t('pagination.page')} ${current}`}
   pathWithoutLocale={`/page/${current}/`}
 >
-  <header class="mb-6">
-    <h1 class="text-3xl font-bold tracking-tight">{t('list.allPosts')}</h1>
-    <p class="text-base-content/70 text-sm">
+  <div class="ai-page-heading mb-10">
+    <h1 class="ai-page-title">{t('list.allPosts')}</h1>
+    <p class="ai-page-meta">
       {t('pagination.page')}
       {current}
       {t('pagination.of')}
       {last}
     </p>
-  </header>
+  </div>
   <PostList posts={pagePosts} locale={locale} />
   <Pagination currentPage={current} lastPage={last} hrefForPage={hrefForPage} locale={locale} />
 </BaseLayout>

@@ -1,6 +1,12 @@
 ---
-import { SITE, type Locale } from '../config';
-import { localizedPath, useTranslations } from '../i18n/utils';
+/**
+ * ai-blog footer: gradient top bar + brand column + three link columns
+ * (Categorías, Etiquetas, Conectar) + bottom legal bar.
+ */
+import { SITE, SOCIALS, type Locale } from '../config';
+import { localizedPath, useTranslations, withBase } from '../i18n/utils';
+import { getCategoriesWithCount, getTagsWithCount, categoryPath, tagPath } from '../utils/posts';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   locale: Locale;
@@ -9,74 +15,118 @@ interface Props {
 const { locale } = Astro.props;
 const t = useTranslations(locale);
 const year = new Date().getFullYear();
+
+const [categories, tags] = await Promise.all([
+  getCategoriesWithCount(locale),
+  getTagsWithCount(locale),
+]);
+const topCategories = categories.slice(0, 4);
+const topTags = tags.slice(0, 4);
+
 const footerLeftText = SITE.footer.leftText?.trim();
-const footerRightText = SITE.footer.rightText?.trim();
 const showPrivacyPolicy = SITE.footer.showPrivacyPolicy ?? SITE.showPrivacyPolicy;
-const showThemeCredits = SITE.footer.showThemeCredits ?? true;
-const shouldRenderRightFooter = Boolean(footerRightText) || showThemeCredits;
 const resolvedLeftText = footerLeftText
   ?.replaceAll('{year}', String(year))
   .replaceAll('{author}', SITE.author.name);
 ---
 
-<footer
-  aria-label="Site Info"
-  class="border-base-300 text-base-content/70 mt-10 flex flex-col gap-1 border-t py-6 text-sm lg:flex-row lg:items-center lg:justify-between"
->
-  <p>
-    {
-      resolvedLeftText ? (
-        resolvedLeftText
-      ) : (
-        <>
-          © <time>{year}</time>{' '}
-          <a href={SITE.author.url ?? '#'} rel="noopener" class="hover:text-primary">
-            {SITE.author.name}
+<footer class="ai-footer" aria-label="Site Info">
+  <div class="ai-footer__grad" aria-hidden="true" />
+  <div class="ai-shell">
+    <div class="ai-footer__grid">
+      {/* Brand column */}
+      <div>
+        <a href={localizedPath('/', locale)} class="ai-brand mb-5">
+          <span class="ai-brand__mark" aria-hidden="true">
+            <Icon name="lucide:sparkles" width={15} height={15} />
+          </span>
+          <span class="ai-brand__name">{SITE.title}</span>
+        </a>
+        <p class="mb-6 max-w-xs text-sm" style="color:var(--color-muted)">
+          {SITE.description}
+        </p>
+        <div class="flex items-center gap-2">
+          {SOCIALS.map((s) => (
+            <a
+              href={s.href.startsWith('/') ? withBase(s.href) : s.href}
+              rel="noopener"
+              class="ai-btn ai-btn-outline h-10 w-10 rounded-full"
+              aria-label={s.label}
+              target={s.href.startsWith('http') || s.label === 'RSS' ? '_blank' : undefined}
+            >
+              <Icon name={s.icon} width={16} height={16} />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Categorías */}
+      <div>
+        <h2 class="ai-footer__heading">{t('nav.categories')}</h2>
+        {topCategories.length > 0 ? (
+          topCategories.map((c) => (
+            <a href={categoryPath(locale, c.name)} class="ai-footer__link">
+              {c.name}
+            </a>
+          ))
+        ) : (
+          <a href={localizedPath('/categories', locale)} class="ai-footer__link">
+            {t('categories.title')}
           </a>
-          . {t('footer.copyright')}
-        </>
-      )
-    }
-    {
-      showPrivacyPolicy && (
-        <>
-          {' · '}
-          <a href={localizedPath('/privacy', locale)} class="hover:text-primary">
+        )}
+      </div>
+
+      {/* Etiquetas */}
+      <div>
+        <h2 class="ai-footer__heading">{t('nav.tags')}</h2>
+        {topTags.length > 0 ? (
+          topTags.map((tag) => (
+            <a href={tagPath(locale, tag.name)} class="ai-footer__link">
+              {tag.name}
+            </a>
+          ))
+        ) : (
+          <a href={localizedPath('/tags', locale)} class="ai-footer__link">
+            {t('tags.title')}
+          </a>
+        )}
+      </div>
+
+      {/* Conectar */}
+      <div>
+        <h2 class="ai-footer__heading">{t('footer.connect')}</h2>
+        <a href={localizedPath('/rss.xml', locale)} class="ai-footer__link">
+          RSS
+        </a>
+        <a href={localizedPath('/archives', locale)} class="ai-footer__link">
+          {t('archives.title')}
+        </a>
+        <a href={localizedPath('/about', locale)} class="ai-footer__link">
+          {t('nav.about')}
+        </a>
+        {showPrivacyPolicy && (
+          <a href={localizedPath('/privacy', locale)} class="ai-footer__link">
             {t('footer.privacy')}
           </a>
-        </>
-      )
-    }
-  </p>
-  {
-    shouldRenderRightFooter && (
+        )}
+      </div>
+    </div>
+
+    <div class="ai-footer__bottom">
       <p>
-        {footerRightText ? (
-          <>
-            {footerRightText}
-            {showThemeCredits && (
-              <>
-                {' · '}
-                {t('footer.theme')}{' '}
-                <a href={SITE.footer.themeUrl} rel="noopener" class="hover:text-primary">
-                  {SITE.footer.themeName}
-                </a>
-              </>
-            )}
-          </>
+        {resolvedLeftText ? (
+          resolvedLeftText
         ) : (
           <>
-            {t('footer.poweredBy')}{' '}
-            <a href="https://astro.build" rel="noopener" class="hover:text-primary">
-              Astro
-            </a>{' '}
-            · {t('footer.theme')}{' '}
-            <a href={SITE.footer.themeUrl} rel="noopener" class="hover:text-primary">
-              {SITE.footer.themeName}
+            © <time>{year}</time>{' '}
+            <a href={SITE.author.url ?? '#'} rel="noopener" class="hover:text-primary">
+              {SITE.author.name}
             </a>
+            . {t('footer.copyright')}
           </>
         )}
       </p>
-    )
-  }
+      <p class="uppercase" style="letter-spacing:.12em">{t('footer.tagline')}</p>
+    </div>
+  </div>
 </footer>

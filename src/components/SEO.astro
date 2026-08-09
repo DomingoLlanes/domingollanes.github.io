@@ -15,14 +15,14 @@ const { meta } = Astro.props;
 // locale's feed too.
 const primaryFeed = {
   href: localizedPath('/rss.xml', meta.locale),
-  title: `${SITE.title}${meta.locale === 'fr' ? ' (FR)' : ''} — RSS`,
+  title: `${SITE.title} — RSS`,
 };
 const otherFeeds = SITE.multilingual
   ? SITE.locales
       .filter((l) => l !== meta.locale)
       .map((l) => ({
         href: localizedPath('/rss.xml', l),
-        title: `${SITE.title}${l === 'fr' ? ' (FR)' : ''} — RSS`,
+        title: `${SITE.title} — RSS`,
       }))
   : [];
 const sitemapHref = withBase('/sitemap-index.xml');

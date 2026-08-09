@@ -1,38 +1,40 @@
 /*
  * Tailwind CSS v4 + daisyUI v5 entry point.
- * See https://daisyui.com/docs/install/ for the canonical install steps.
  *
- * Theme palette closely matches the original Chirpy theme
- * (https://chirpy.cotes.page/) — light grey page background, indigo-blue
- * primary, white cards, generous typography.
+ * Ships TWO theme families:
+ *  - `chirpy-light` / `chirpy-dark` — the original Chirpy palette (kept as
+ *    a fallback; switch `THEME` in src/config.ts + the `<html data-theme>`
+ *    attribute to revert).
+ *  - `ai-blog-light` / `ai-blog-dark` — the default editorial theme, adapted
+ *    from the `ai-blog.pen` design: paper/ink/coral, Newsreader display,
+ *    Inter body, IBM Plex Mono labels.
+ *
+ * Alert plugin safelist: Tailwind must emit classes used by the
+ * remark-alert plugin (raw HTML the content scanner may not see).
  */
-
 @import 'tailwindcss';
 @plugin 'daisyui' {
   themes: false; /* we provide our own themes below */
   logs: false;
 }
 
-/* ---------- Alert plugin safelist ---------- */
-/* Force Tailwind to emit classes used by the remark-alert plugin, which
-   generates raw HTML that the content scanner may not see at build time. */
 @source inline('alert-{info,success,warning,error,soft,outline,dash,vertical,horizontal}');
 @source inline('sm:alert-horizontal');
 
-/* ---------- Chirpy LIGHT ---------- */
+/* =====================================================================
+   Chirpy themes (fallback) — see src/config.ts THEME to reactivate.
+   ===================================================================== */
 @plugin 'daisyui/theme' {
   name: 'chirpy-light';
-  default: true;
+  default: false;
   prefersdark: false;
   color-scheme: light;
 
-  /* Page bg / cards / dividers / body text */
-  --color-base-100: oklch(100% 0 0); /* card bg (white)         */
-  --color-base-200: oklch(97% 0.0015 264); /* page bg #f6f7f8         */
-  --color-base-300: oklch(91% 0.0025 264); /* dividers #e8e8e8        */
-  --color-base-content: oklch(20% 0.012 264); /* near-black text         */
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(97% 0.0015 264);
+  --color-base-300: oklch(91% 0.0025 264);
+  --color-base-content: oklch(20% 0.012 264);
 
-  /* Chirpy indigo-blue primary (~ #2a408e) */
   --color-primary: oklch(45% 0.135 264);
   --color-primary-content: oklch(99% 0.003 264);
 
@@ -67,20 +69,17 @@
   --noise: 0;
 }
 
-/* ---------- Chirpy DARK ---------- */
 @plugin 'daisyui/theme' {
   name: 'chirpy-dark';
   default: false;
-  prefersdark: true;
+  prefersdark: false;
   color-scheme: dark;
 
-  /* Chirpy dark uses #1b1b1e for the page and #1e1e1f for cards */
   --color-base-100: oklch(22% 0.005 264);
   --color-base-200: oklch(20% 0.005 264);
   --color-base-300: oklch(28% 0.008 264);
   --color-base-content: oklch(86% 0.01 264);
 
-  /* Lighter indigo for dark mode contrast (~ #7895d4) */
   --color-primary: oklch(72% 0.11 264);
   --color-primary-content: oklch(15% 0.015 264);
 
@@ -115,38 +114,153 @@
   --noise: 0;
 }
 
-/* ---------- Chirpy-specific tokens (non-daisyUI) ---------- */
+/* =====================================================================
+   ai-blog themes (default)
+   ===================================================================== */
+@plugin 'daisyui/theme' {
+  name: 'ai-blog-light';
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Paper / ink / coral */
+  --color-base-100: #fffdf7; /* card        */
+  --color-base-200: #faf4e8; /* page        */
+  --color-base-300: #e8dec9; /* hairline    */
+  --color-base-content: #1c150b; /* ink       */
+
+  --color-primary: #ff5c39;
+  --color-primary-content: #1c150b;
+
+  --color-secondary: #9b5cff;
+  --color-secondary-content: #fffdf7;
+
+  --color-accent: #ff9a3d;
+  --color-accent-content: #1c150b;
+
+  --color-neutral: #191209;
+  --color-neutral-content: #faf4e8;
+
+  --color-info: #dfe3f0;
+  --color-info-content: #000066;
+
+  --color-success: #dce9e0;
+  --color-success-content: #004d1a;
+
+  --color-warning: #e9e3d8;
+  --color-warning-content: #804200;
+
+  --color-error: #e5dcd8;
+  --color-error-content: #8c1c00;
+
+  --radius-selector: 999px;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin 'daisyui/theme' {
+  name: 'ai-blog-dark';
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #201a11; /* card     */
+  --color-base-200: #161210; /* page     */
+  --color-base-300: #3a3222; /* hairline */
+  --color-base-content: #f1eada; /* ink   */
+
+  --color-primary: #ff5c39;
+  --color-primary-content: #1c150b;
+
+  --color-secondary: #9b5cff;
+  --color-secondary-content: #161210;
+
+  --color-accent: #ff9a3d;
+  --color-accent-content: #1c150b;
+
+  --color-neutral: #26201a;
+  --color-neutral-content: #f1eada;
+
+  --color-info: #23232c;
+  --color-info-content: #b2b2ff;
+
+  --color-success: #222924;
+  --color-success-content: #b6ffce;
+
+  --color-warning: #291c0f;
+  --color-warning-content: #ff8400;
+
+  --color-error: #24100b;
+  --color-error-content: #ff5c33;
+
+  --radius-selector: 999px;
+  --radius-field: 0.5rem;
+  --radius-box: 0.75rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* ---------- ai-blog design tokens (build-time + runtime) ---------- */
 @theme {
-  /* Chirpy sidebar gradient */
-  --color-sidebar-from: oklch(99% 0 0);
-  --color-sidebar-to: oklch(95% 0.005 264);
-  --color-sidebar-text: oklch(40% 0.01 264);
-  --color-sidebar-muted: oklch(50% 0.012 264);
+  /* Paper surfaces */
+  --color-surface: #faf4e8;
+  --color-card: #fffdf7;
+  --color-ink: #1c150b;
+  --color-muted: #5c5342;
+  --color-hairline: #e8dec9;
+  --color-dark: #191209;
 
-  /* Sidebar/panel widths — matches Chirpy ($sidebar-width 260px, $sidebar-width-large 300px) */
-  --width-sidebar: 16.25rem; /* 260px */
-  --width-sidebar-lg: 18.75rem; /* 300px (>=1650px) */
-  --width-panel: 13.75rem; /* 220px */
+  /* Accents */
+  --color-accent: #ff5c39;
+  --color-accent-2: #9b5cff;
+  --color-accent-3: #ff9a3d;
+  --color-accent-soft: #ffe8dd;
 
-  /* Top bar height — Chirpy $topbar-height: 3rem */
-  --height-topbar: 3rem; /* 48px */
+  /* Category chips */
+  --color-c-noticias: #b45309;
+  --color-c-noticias-bg: #f5e6d0;
+  --color-c-pruebas: #4f46e5;
+  --color-c-pruebas-bg: #e7e3fa;
+  --color-c-conceptos: #0f766e;
+  --color-c-conceptos-bg: #dcedea;
+  --color-c-ialocal: #c2410c;
+  --color-c-ialocal-bg: #f6e3d8;
+  --color-c-suscripciones: #6d28d9;
+  --color-c-suscripciones-bg: #ede4fa;
 
-  /* Reading column max width on post pages */
-  --width-prose: 50rem;
+  /* Fonts */
+  --font-display: var(--font-newsreader, Georgia, serif);
+  --font-body: var(--font-inter, system-ui, sans-serif);
+  --font-mono: var(--font-ibm-plex-mono, ui-monospace, monospace);
 
-  /* Fonts — configured via Astro Fonts API (astro.config.mjs) */
-  --font-sans: var(--font-source-sans-3, system-ui, sans-serif);
-  --font-mono: var(--font-jetbrains-mono, ui-monospace, monospace);
+  /* Layout metrics */
+  --width-shell: 90rem; /* 1440 — design screen width */
+  --width-content: 81rem; /* 1296 — inner content column */
+  --width-prose: 52rem; /* 832 — article body */
+  --width-toc: 13.125rem; /* 210 — lateral TOC */
 }
 
-[data-theme='chirpy-dark'] {
-  --color-sidebar-from: oklch(20% 0.005 264);
-  --color-sidebar-to: oklch(17% 0.005 264);
-  --color-sidebar-text: oklch(75% 0.01 264);
-  --color-sidebar-muted: oklch(55% 0.012 264);
+[data-theme='ai-blog-dark'] {
+  --color-surface: #161210;
+  --color-card: #201a11;
+  --color-ink: #f1eada;
+  --color-muted: #a89c87;
+  --color-hairline: #3a3222;
+  --color-dark: #26201a;
+  --color-accent-soft: #3a2418;
 }
 
-/* ---------- Base layer ---------- */
+/* =====================================================================
+   Base layer
+   ===================================================================== */
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -155,26 +269,36 @@
   }
 
   body {
-    @apply bg-base-200 text-base-content min-h-screen antialiased;
-    font-family: var(--font-sans);
+    @apply min-h-screen antialiased;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-body);
     font-size: 1rem;
     line-height: 1.65;
   }
 
   :focus-visible {
-    @apply outline-primary outline-2 outline-offset-2;
+    @apply outline-2 outline-offset-2 outline-primary;
   }
 
   ::selection {
-    @apply bg-primary/25 text-base-content;
+    background: color-mix(in oklab, var(--color-primary) 30%, transparent);
+    color: var(--color-ink);
   }
 
-  /* ---------- Astro View Transitions (subtle fade + lift) ---------- */
-  /* Astro tags the whole page with view-transition-name: root by default.
-     We override the default slide animation with a soft fade combined
-     with a tiny upward translation so navigations feel smooth but clearly
-     animated. */
-  @keyframes chirpy-fade-in {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-ink) 20%, transparent);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--color-ink) 35%, transparent);
+  }
+
+  @keyframes ai-fade-in {
     from {
       opacity: 0;
       transform: translateY(8px);
@@ -184,7 +308,7 @@
       transform: translateY(0);
     }
   }
-  @keyframes chirpy-fade-out {
+  @keyframes ai-fade-out {
     from {
       opacity: 1;
       transform: translateY(0);
@@ -195,10 +319,10 @@
     }
   }
   ::view-transition-old(root) {
-    animation: chirpy-fade-out 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: ai-fade-out 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
   }
   ::view-transition-new(root) {
-    animation: chirpy-fade-in 360ms cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation: ai-fade-in 360ms cubic-bezier(0.4, 0, 0.2, 1) both;
   }
   @media (prefers-reduced-motion: reduce) {
     ::view-transition-old(root),
@@ -207,549 +331,646 @@
     }
   }
 
-  /* Anchored headings (rehype-autolink-headings, behavior:"wrap") */
   .heading-anchor {
     @apply text-inherit no-underline;
   }
   .heading-anchor:hover::after {
     content: '#';
-    @apply text-base-content/30 ml-2;
+    @apply ml-2 text-ink/30;
+  }
+}
+
+/* =====================================================================
+   Layout chrome
+   ===================================================================== */
+@layer components {
+  /* Full-width page shell. Mirrors the 1440 design canvas with horizontal
+     padding; inner content column caps at 1296. */
+  .ai-shell {
+    @apply mx-auto w-full;
+    max-width: var(--width-shell);
+    padding-inline: clamp(1.25rem, 5vw, 4.5rem);
   }
 
-  /* Custom scrollbar (Webkit) — Chirpy-like thin grey thumb */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  /* Horizontal top navbar: brand | links | actions. */
+  .ai-nav {
+    @apply sticky top-0 z-40 border-b;
+    border-color: var(--color-hairline);
+    background: color-mix(in oklab, var(--color-surface) 82%, transparent);
+    backdrop-filter: blur(12px);
   }
-  ::-webkit-scrollbar-thumb {
-    background: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  .ai-nav__inner {
+    @apply flex h-19 items-center justify-between gap-6;
+  }
+  .ai-nav__links {
+    @apply hidden items-center gap-7 lg:flex;
+  }
+  .ai-nav__actions {
+    @apply flex items-center gap-3;
+  }
+
+  .ai-brand {
+    @apply flex items-center gap-2.5;
+  }
+  .ai-brand__mark {
+    @apply flex h-8 w-8 items-center justify-center rounded-full text-[0.7rem] font-bold;
+    background: linear-gradient(135deg, #ff5c39, #9b5cff);
+    color: #fffdf7;
+  }
+  .ai-brand__name {
+    @apply text-[1.05rem] font-semibold tracking-tight;
+    font-family: var(--font-display);
+  }
+
+  .ai-nav-link {
+    @apply relative flex items-center gap-2 text-xs font-medium tracking-[0.18em] uppercase;
+    color: var(--color-muted);
+    transition: color 0.2s ease;
+  }
+  .ai-nav-link:hover,
+  .ai-nav-link[aria-current='page'] {
+    color: var(--color-ink);
+  }
+  .ai-nav-link .ai-nav-dot {
+    @apply h-1.5 w-1.5 rounded-full;
+    background: var(--color-muted);
+    transition: background 0.2s ease;
+  }
+  .ai-nav-link:hover .ai-nav-dot,
+  .ai-nav-link[aria-current='page'] .ai-nav-dot {
+    background: linear-gradient(135deg, #ff5c39, #9b5cff);
+  }
+
+  /* Buttons */
+  .ai-btn {
+    @apply inline-flex items-center justify-center gap-2 text-xs font-semibold tracking-[0.18em] uppercase;
     border-radius: 999px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: color-mix(in oklab, var(--color-base-content) 35%, transparent);
+  .ai-btn:hover {
+    transform: translateY(-1px);
+  }
+  .ai-btn-primary {
+    background: var(--color-primary);
+    color: var(--color-primary-content);
+    box-shadow: 0 6px 20px color-mix(in oklab, var(--color-primary) 35%, transparent);
+  }
+  .ai-btn-primary:hover {
+    box-shadow: 0 8px 26px color-mix(in oklab, var(--color-primary) 45%, transparent);
+  }
+  .ai-btn-outline {
+    border: 1px solid var(--color-hairline);
+    color: var(--color-ink);
+  }
+  .ai-btn-outline:hover {
+    border-color: var(--color-ink);
+  }
+  .ai-btn-soft {
+    background: var(--color-accent-soft);
+    color: var(--color-primary);
+  }
+  .ai-btn-soft:hover {
+    background: color-mix(in oklab, var(--color-accent-soft) 70%, var(--color-primary) 8%);
+  }
+
+  /* Eyebrow labels */
+  .ai-kicker {
+    @apply flex items-center gap-3 text-xs font-semibold tracking-[0.18em] uppercase;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+  }
+  .ai-kicker__dot {
+    @apply h-2.5 w-2.5 shrink-0 rounded-full;
+    background: linear-gradient(135deg, #ff5c39, #9b5cff);
+  }
+  .ai-kicker--accent {
+    color: var(--color-primary);
+  }
+
+  /* Display headings (Newsreader) */
+  .ai-display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.06;
+    color: var(--color-ink);
+  }
+  .ai-grad-text {
+    background: linear-gradient(135deg, #ff5c39 0%, #ff9a3d 50%, #9b5cff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ai-sub {
+    color: var(--color-muted);
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  /* ---------- Hero ---------- */
+  .ai-hero {
+    @apply relative overflow-hidden;
+  }
+  .ai-hero__orb {
+    @apply pointer-events-none absolute rounded-full;
+    filter: blur(50px);
+  }
+  .ai-hero__inner {
+    @apply relative flex flex-col gap-6 pt-20 pb-14 lg:pt-28 lg:pb-20;
+  }
+
+  /* ---------- Post rows (numbered list) ---------- */
+  .ai-post-row {
+    @apply flex items-start gap-6 border-b py-7 sm:gap-10;
+    border-color: var(--color-hairline);
+    transition: background 0.2s ease;
+  }
+  .ai-post-row:first-child {
+    border-top: 1px solid var(--color-hairline);
+  }
+  .ai-post-row:hover {
+    background: color-mix(in oklab, var(--color-surface) 70%, var(--color-card));
+  }
+  .ai-post-row__index {
+    @apply mt-0.5 shrink-0 text-[2rem] leading-none font-medium;
+    font-family: var(--font-mono);
+    color: color-mix(in oklab, var(--color-ink) 25%, transparent);
+  }
+  .ai-post-row__body {
+    @apply flex min-w-0 flex-1 flex-col gap-2.5;
+  }
+  .ai-post-row__kind {
+    @apply flex flex-wrap items-center gap-2;
+  }
+  .ai-post-row__title {
+    @apply text-2xl leading-tight font-medium tracking-tight sm:text-[1.7rem];
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+  .ai-post-row:hover .ai-post-row__title {
+    color: var(--color-primary);
+  }
+  .ai-post-row__excerpt {
+    @apply line-clamp-2;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+  .ai-post-row__meta {
+    @apply text-xs tracking-wide;
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .ai-post-row__arrow {
+    @apply mt-2 hidden shrink-0 sm:block;
+    color: var(--color-muted);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .ai-post-row:hover .ai-post-row__arrow {
+    color: var(--color-primary);
+    transform: translate(3px, -3px);
+  }
+
+  /* Category / kind chips */
+  .ai-chip {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[0.68rem] font-semibold tracking-[0.14em] uppercase;
+  }
+
+  /* Filters */
+  .ai-filter {
+    @apply inline-flex cursor-pointer items-center rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-[0.14em] uppercase transition;
+    color: var(--color-muted);
+    border: 1px solid transparent;
+  }
+  .ai-filter:hover {
+    color: var(--color-ink);
+  }
+  .ai-filter[aria-pressed='true'] {
+    background: var(--color-ink);
+    color: var(--color-surface);
+  }
+
+  /* Featured post card */
+  .ai-featured {
+    @apply relative overflow-hidden border;
+    border-color: var(--color-hairline);
+    background: var(--color-card);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .ai-featured:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px color-mix(in oklab, var(--color-ink) 10%, transparent);
+  }
+  .ai-featured__grad {
+    @apply block h-1 w-full;
+    background: linear-gradient(90deg, #ff5c39, #ff9a3d 50%, #9b5cff);
+  }
+
+  /* Concepts band */
+  .ai-concept {
+    @apply relative flex flex-col gap-3 border;
+    border-color: var(--color-hairline);
+    background: var(--color-card);
+    padding: 2rem 1.75rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .ai-concept:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px color-mix(in oklab, var(--color-ink) 10%, transparent);
+  }
+  .ai-concept__grad {
+    @apply absolute inset-x-0 top-0 h-0.5;
+    background: linear-gradient(90deg, #ff5c39, #9b5cff);
+  }
+  .ai-concept__index {
+    @apply text-xs font-semibold tracking-[0.18em];
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+  }
+  .ai-concept__title {
+    @apply text-2xl font-medium tracking-tight;
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+  .ai-concept__desc {
+    @apply text-sm;
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+  .ai-concept__time {
+    @apply text-[0.68rem] font-semibold tracking-[0.16em] uppercase;
+    color: color-mix(in oklab, var(--color-muted) 80%, transparent);
+    font-family: var(--font-mono);
+  }
+
+  /* Newsletter */
+  .ai-newsletter {
+    @apply relative overflow-hidden border;
+    border-color: var(--color-hairline);
+    background: var(--color-card);
+  }
+  .ai-newsletter__grad {
+    @apply block h-1 w-full;
+    background: linear-gradient(90deg, #ff5c39, #9b5cff);
+  }
+  .ai-input {
+    @apply h-13 w-full px-5 text-sm;
+    background: var(--color-surface);
+    border: 1px solid var(--color-hairline);
+    border-radius: 999px;
+    color: var(--color-ink);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .ai-input::placeholder {
+    color: color-mix(in oklab, var(--color-muted) 70%, transparent);
+  }
+  .ai-input:focus {
+    border-color: var(--color-primary);
+  }
+
+  /* ---------- Footer ---------- */
+  .ai-footer {
+    @apply mt-20 border-t;
+    border-color: var(--color-hairline);
+  }
+  .ai-footer__grad {
+    @apply block h-1 w-full;
+    background: linear-gradient(90deg, #ff5c39, #ff9a3d 50%, #9b5cff);
+  }
+  .ai-footer__grid {
+    @apply grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr];
+  }
+  .ai-footer__heading {
+    @apply mb-4 text-xs font-semibold tracking-[0.18em] uppercase;
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+  }
+  .ai-footer__link {
+    @apply block py-1 text-sm;
+    color: var(--color-muted);
+    transition: color 0.15s ease;
+  }
+  .ai-footer__link:hover {
+    color: var(--color-primary);
+  }
+  .ai-footer__bottom {
+    @apply flex flex-col gap-2 border-t py-6 text-xs lg:flex-row lg:items-center lg:justify-between;
+    border-color: var(--color-hairline);
+    color: var(--color-muted);
+  }
+
+  /* ---------- Article ---------- */
+  .ai-article-header {
+    @apply border-b pb-10;
+    border-color: var(--color-hairline);
+  }
+  .ai-article-title {
+    @apply text-4xl leading-[1.08] font-medium tracking-tight sm:text-[3.4rem];
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+  .ai-author {
+    @apply flex items-center gap-4;
+  }
+  .ai-avatar {
+    @apply flex shrink-0 items-center justify-center rounded-full text-sm font-bold;
+    background: linear-gradient(135deg, #ff5c39, #9b5cff);
+    color: #fffdf7;
+  }
+  .ai-byline {
+    @apply text-xs leading-snug;
+    color: var(--color-muted);
+  }
+
+  .ai-layout-article {
+    @apply grid grid-cols-1 gap-12 pt-12;
+  }
+  .ai-layout-article--toc {
+    @apply xl:grid-cols-[13.125rem_minmax(0,1fr)];
+  }
+  .ai-toc {
+    @apply hidden xl:block;
+  }
+  .ai-toc__list {
+    @apply sticky top-28 max-h-[calc(100vh-8rem)] overflow-y-auto;
+  }
+  .ai-toc__item {
+    @apply flex items-baseline gap-3 border-l py-1.5 pl-4 text-sm;
+    border-color: color-mix(in oklab, var(--color-ink) 12%, transparent);
+    color: var(--color-muted);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .ai-toc__item:hover,
+  .ai-toc__item[data-active='true'] {
+    color: var(--color-ink);
+    border-color: var(--color-primary);
+  }
+  .ai-toc__num {
+    @apply shrink-0 text-[0.68rem] font-semibold tracking-widest;
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+  }
+
+  .ai-article-body {
+    @apply min-w-0 justify-self-center;
+    max-width: var(--width-prose);
+    width: 100%;
+  }
+
+  .ai-author-box {
+    @apply flex flex-col gap-5 border-y py-8 sm:flex-row sm:items-center sm:gap-6;
+    border-color: var(--color-hairline);
+  }
+  .ai-author-box__name {
+    @apply text-lg font-medium;
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+  .ai-author-box__bio {
+    @apply text-sm;
+    color: var(--color-muted);
+  }
+
+  .ai-prevnext {
+    @apply grid gap-4 border-b pt-8 sm:grid-cols-2;
+    border-color: var(--color-hairline);
+  }
+  .ai-prevnext__card {
+    @apply flex flex-col gap-1.5 border px-6 py-5 transition;
+    border-color: var(--color-hairline);
+    background: var(--color-card);
+  }
+  .ai-prevnext__card:hover {
+    border-color: var(--color-primary);
+  }
+  .ai-prevnext__kicker {
+    @apply text-[0.68rem] font-semibold tracking-[0.16em] uppercase;
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+  }
+  .ai-prevnext__title {
+    @apply text-lg leading-snug font-medium;
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+
+  .ai-related__card {
+    @apply flex flex-col gap-2 border;
+    border-color: var(--color-hairline);
+    background: var(--color-card);
+    padding: 1.5rem 1.25rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .ai-related__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px color-mix(in oklab, var(--color-ink) 10%, transparent);
+  }
+  .ai-related__title {
+    @apply text-lg leading-snug font-medium;
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+  .ai-related__card:hover .ai-related__title {
+    color: var(--color-primary);
   }
 }
 
-/* ---------- Layout chrome ---------- */
+/* =====================================================================
+   Prose (article + page bodies)
+   ===================================================================== */
 @layer components {
-  /* Left sidebar — always pinned to the extreme left of the viewport. */
-  .chirpy-sidebar {
-    @apply border-base-300 fixed inset-y-0 left-0 z-40 flex flex-col items-center border-r px-4 py-6;
-    width: var(--width-sidebar);
-    background: linear-gradient(180deg, var(--color-sidebar-from) 0%, var(--color-sidebar-to) 100%);
-    color: var(--color-sidebar-text);
-    transition: transform 0.3s ease;
-  }
-  @media (max-width: 1023px) {
-    .chirpy-sidebar {
-      transform: translateX(-100%);
-    }
-    .chirpy-sidebar.is-open {
-      transform: translateX(0);
-    }
-  }
-  @media (min-width: 1650px) {
-    .chirpy-sidebar {
-      width: var(--width-sidebar-lg);
-    }
-  }
-
-  .chirpy-main-wrapper {
-    @apply flex min-h-screen w-full flex-col px-4 sm:px-6;
-  }
-  @media (min-width: 1024px) {
-    .chirpy-main-wrapper {
-      margin-left: var(--width-sidebar);
-      width: calc(100% - var(--width-sidebar));
-      max-width: calc(100% - var(--width-sidebar));
-      padding-left: 3rem;
-      padding-right: 3rem;
-    }
-  }
-  @media (min-width: 1280px) {
-    .chirpy-main-wrapper {
-      padding-left: 3.5rem;
-      padding-right: 3.5rem;
-    }
-  }
-  @media (min-width: 1650px) {
-    .chirpy-main-wrapper {
-      margin-left: var(--width-sidebar-lg);
-      width: calc(100% - var(--width-sidebar-lg));
-      max-width: calc(100% - var(--width-sidebar-lg));
-    }
-  }
-
-  /* Inner shell that horizontally centers the main content (topbar +
-     post cards + panel + footer) inside the area to the right of the
-     sidebar. Caps at Chirpy's $main-content-max-width: 1250px. */
-  .chirpy-shell {
-    @apply mx-auto flex w-full flex-1 flex-col;
-    max-width: 1250px;
-  }
-
-  /* Top bar — uses min-height (not a fixed height) plus vertical padding
-     so the controls aren't flush against the browser chrome on either
-     mobile or desktop. */
-  .chirpy-topbar {
-    @apply bg-base-200/80 supports-backdrop-filter:bg-base-200/70 sticky top-0 z-30 flex min-h-(--height-topbar) items-center justify-between gap-3 py-2 backdrop-blur sm:py-3;
-  }
-
-  /* Right rail wrapper. Holds the global Panel widget followed by an
-     optional aside-bottom slot (e.g. the post TOC). The rail intentionally
-     does NOT use `self-start` so that, on long pages, it stretches to
-     match `<main>`'s height — giving any sticky child (e.g. the TOC)
-     enough vertical room to remain pinned while the article scrolls. */
-  .chirpy-panel-rail {
-    @apply hidden shrink-0 pt-6 text-sm xl:block;
-    width: var(--width-panel);
-  }
-  @media (min-width: 1440px) {
-    .chirpy-panel-rail {
-      width: 15rem; /* 240px */
-    }
-  }
-  @media (min-width: 1650px) {
-    .chirpy-panel-rail {
-      width: 16.25rem; /* 260px */
-    }
-  }
-  .chirpy-panel-rail > * + * {
-    margin-top: 2rem;
-  }
-  /* Search slot inside the topbar — on xl+ its width matches the right
-     panel rail so the search pill aligns vertically over the panel column.
-     Below xl, the right rail is hidden so the slot shrinks to fit. */
-  .chirpy-topbar__search {
-    @apply flex shrink-0 items-center justify-start gap-2 px-1;
-  }
-  @media (min-width: 1280px) {
-    .chirpy-topbar__search {
-      width: calc(var(--width-panel) + 2.5rem); /* rail width + gap-10 */
-      padding-left: 2.5rem; /* mirror gap-10 between main and rail */
-    }
-  }
-  @media (min-width: 1440px) {
-    .chirpy-topbar__search {
-      width: calc(15rem + 2.5rem);
-    }
-  }
-  @media (min-width: 1650px) {
-    .chirpy-topbar__search {
-      width: calc(16.25rem + 2.5rem);
-    }
-  }
-  /* Search row at the very top of the right panel rail. */
-  .chirpy-panel-rail__search {
-    @apply w-full;
-  }
-
-  /* Inner Panel widget (Recently Updated + Trending Tags). Width and
-     visibility are owned by the rail wrapper, so this is content-only. */
-  .chirpy-panel {
-    @apply block text-sm;
-  }
-
-  /* Subtle left rail for aside items (Recently Updated, TOC, etc.).
-     Each item gets a faint left border that turns primary on hover/active. */
-  .chirpy-aside-list {
-    @apply flex flex-col;
-    border-left: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
-  }
-  .chirpy-aside-item {
-    @apply text-base-content/75 block py-1.5 pr-2 pl-3 text-sm transition;
-    margin-left: -1px;
-    border-left: 1px solid transparent;
-  }
-  .chirpy-aside-item:hover {
-    @apply text-primary;
-    border-left-color: var(--color-primary);
-  }
-  .chirpy-aside-item[data-active='true'] {
-    @apply text-primary font-semibold;
-    border-left-color: var(--color-primary);
-  }
-
-  /* Post card — horizontal Chirpy card */
-  .chirpy-card {
-    @apply border-base-300 bg-base-100 mb-5 overflow-hidden rounded-md border transition hover:-translate-y-0.5 hover:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.05),0_4px_12px_rgba(0,0,0,0.08)];
-  }
-  .chirpy-card-link {
-    @apply grid grid-cols-1 gap-0 md:grid-cols-12;
-  }
-  /* Image cards can be fixed-size (default Chirpy behavior) or dynamic
-     based on `SITE.dynamicPostCardHeight`. */
-  .chirpy-card-link.has-image {
-    @apply md:grid-cols-12;
-  }
-
-  .chirpy-card-body {
-    @apply flex min-w-0 flex-col p-4 sm:p-5 md:col-span-7 md:p-6;
-  }
-  .chirpy-card-body.full {
-    @apply md:col-span-12;
-  }
-  .chirpy-card-link.no-image .chirpy-card-body {
-    @apply md:p-5;
-  }
-  /* Title and description gain line-clamps so a very long title (or a
-     verbose description) cannot push the card past the fixed height. */
-  .chirpy-card-title {
-    @apply text-base-content mt-0 text-2xl leading-snug font-bold tracking-tight sm:text-[1.55rem];
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .chirpy-card-title.compact {
-    @apply md:text-[1.4rem];
-  }
-  @media (min-width: 768px) {
-    .chirpy-card-link.has-image.dynamic-size .chirpy-card-title {
-      display: block;
-      -webkit-line-clamp: unset;
-      line-clamp: unset;
-      -webkit-box-orient: unset;
-      overflow: visible;
-    }
-    .chirpy-card-link.has-image.dynamic-size .chirpy-card-body > p {
-      -webkit-line-clamp: unset;
-      line-clamp: unset;
-      overflow: visible;
-      display: block;
-    }
-  }
-  .chirpy-card-image-wrap {
-    @apply order-first overflow-hidden md:order-last md:col-span-5 md:flex md:flex-col;
-  }
-  .chirpy-card-image {
-    @apply h-44 w-full object-cover md:min-h-0 md:flex-1 md:rounded-r-md;
-  }
-}
-
-/* ---------- Prose tuning for the post body ---------- */
-@layer components {
-  .prose-chirpy {
-    @apply text-base-content;
-    line-height: 1.75;
+  .prose-ai {
+    @apply text-ink;
     font-size: 1.0625rem;
+    line-height: 1.75;
   }
 
-  .prose-chirpy h1,
-  .prose-chirpy h2,
-  .prose-chirpy h3,
-  .prose-chirpy h4 {
-    @apply text-base-content scroll-mt-24 font-semibold tracking-tight;
+  .prose-ai h1,
+  .prose-ai h2,
+  .prose-ai h3,
+  .prose-ai h4 {
+    @apply scroll-mt-24 font-medium tracking-tight;
+    color: var(--color-ink);
+    font-family: var(--font-display);
   }
-  .prose-chirpy h1 {
-    @apply mt-8 mb-4 text-3xl;
+  .prose-ai h2 {
+    @apply mt-12 mb-4 flex items-baseline gap-3 border-b pb-3 text-2xl;
+    border-color: var(--color-hairline);
   }
-  .prose-chirpy h2 {
-    @apply border-base-300 mt-10 mb-4 border-b pb-2 text-2xl;
+  .prose-ai h3 {
+    @apply mt-9 mb-3 text-xl;
   }
-  .prose-chirpy h3 {
-    @apply mt-8 mb-3 text-xl;
+  .prose-ai h4 {
+    @apply mt-7 mb-2 text-lg;
   }
-  .prose-chirpy h4 {
-    @apply mt-6 mb-2 text-lg;
-  }
-  .prose-chirpy p {
+  .prose-ai p {
     @apply my-4;
   }
-  .prose-chirpy a:not(.heading-anchor) {
-    @apply text-primary decoration-primary/30 hover:decoration-primary underline underline-offset-2;
+  .prose-ai a:not(.heading-anchor) {
+    @apply underline underline-offset-2;
+    color: var(--color-primary);
+    text-decoration-color: color-mix(in oklab, var(--color-primary) 35%, transparent);
   }
-  .prose-chirpy a.heading-anchor {
+  .prose-ai a:not(.heading-anchor):hover {
+    text-decoration-color: var(--color-primary);
+  }
+  .prose-ai a.heading-anchor {
     @apply text-inherit no-underline;
   }
-  .prose-chirpy ul {
+  .prose-ai ul {
     @apply my-4 list-disc pl-6;
   }
-  .prose-chirpy ol {
+  .prose-ai ol {
     @apply my-4 list-decimal pl-6;
   }
-  .prose-chirpy blockquote {
-    @apply border-primary/50 bg-base-200 text-base-content/80 my-6 rounded-r-sm border-l-4 px-4 py-2 italic;
+  .prose-ai blockquote {
+    @apply my-6 border-l-4 px-5 py-3 text-lg;
+    border-color: var(--color-primary);
+    background: var(--color-accent-soft);
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
   }
-  .prose-chirpy hr {
-    @apply border-base-300 my-10;
+  .prose-ai hr {
+    @apply my-10;
+    border-color: var(--color-hairline);
   }
-  .prose-chirpy code:not(pre code) {
-    @apply bg-base-200 text-accent rounded px-1.5 py-0.5 font-mono text-[0.92em];
+  .prose-ai code:not(pre code) {
+    @apply rounded px-1.5 py-0.5 text-[0.92em];
+    background: var(--color-accent-soft);
+    color: var(--color-primary);
     font-family: var(--font-mono);
   }
-  .prose-chirpy pre {
-    @apply border-base-300 relative my-6 overflow-x-auto rounded-md border p-4 text-sm leading-relaxed;
+  .prose-ai pre {
+    @apply relative my-6 overflow-x-auto rounded-md p-4 text-sm leading-relaxed;
+    background: var(--color-dark);
+    color: var(--color-surface);
     font-family: var(--font-mono);
   }
-  .prose-chirpy pre code {
-    @apply bg-transparent p-0;
+  .prose-ai pre code {
+    background: transparent;
+    color: inherit;
   }
-  .prose-chirpy img {
-    @apply border-base-300 mx-auto my-6 rounded-md border;
+  .prose-ai img {
+    @apply mx-auto my-6;
     max-width: 100%;
     height: auto;
   }
-
-  /* Figures — mirror the hero image treatment so the caption feels
-     visually attached to the image rather than floating below. */
-  .prose-chirpy figure {
+  .prose-ai figure {
     @apply my-6;
   }
-  .prose-chirpy figure > img,
-  .prose-chirpy figure > picture > img {
-    @apply mx-auto rounded-md border-0;
-    margin-top: 0;
-    margin-bottom: 0;
-    max-width: 100%;
-    height: auto;
-    display: block;
+  .prose-ai figcaption {
+    @apply mt-2 text-center text-xs;
+    color: var(--color-muted);
   }
-  .prose-chirpy figcaption {
-    @apply text-base-content/70 mt-2 text-center text-xs italic;
-  }
-
-  /* Video embeds — responsive 16:9 iframe container */
-  .video-embed__frame {
-    @apply relative overflow-hidden rounded-md;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    background: var(--color-sidebar-to);
-  }
-  .video-embed__frame > iframe {
-    @apply absolute inset-0 h-full w-full;
-    border: 0;
-  }
-
-  /* Hero image — contained within content width, using the sidebar's
-     subtle gradient as a placeholder background. */
-  .post-hero {
-    @apply mx-auto;
-    max-width: 100%;
-  }
-  .post-hero__frame {
-    @apply relative overflow-hidden rounded-md;
-    background: var(--color-sidebar-to);
-  }
-  .post-hero__img {
-    @apply block w-full;
-    height: auto;
-    object-fit: cover;
-  }
-  .prose-chirpy table {
+  .prose-ai table {
     @apply my-6 w-full border-collapse text-left text-sm;
   }
-  .prose-chirpy table th,
-  .prose-chirpy table td {
-    @apply border-base-300 border px-3 py-2;
+  .prose-ai table th,
+  .prose-ai table td {
+    @apply border px-3 py-2;
+    border-color: var(--color-hairline);
   }
-  .prose-chirpy table thead {
-    @apply bg-base-200;
-  }
-
-  /* Callouts (.callout.callout-info / -success / -warning / -error) */
-  .callout {
-    @apply my-6 rounded-md border-l-4 px-4 py-3;
-  }
-  .callout-info {
-    @apply border-info bg-info/10;
-  }
-  .callout-success {
-    @apply border-success bg-success/10;
-  }
-  .callout-warning {
-    @apply border-warning bg-warning/10;
-  }
-  .callout-error {
-    @apply border-error bg-error/10;
+  .prose-ai table thead {
+    background: color-mix(in oklab, var(--color-hairline) 30%, transparent);
   }
 
-  /* Alert plugin: only add space when alerts are stacked together. */
-  .prose-chirpy div[role='alert'] + div[role='alert'] {
-    @apply mt-4;
-  }
-}
-
-/* ---------- Expressive Code -----------------------------
- * Code blocks are rendered by `astro-expressive-code`. It emits its own
- * scoped styles (`.expressive-code`) and drives the active theme via the
- * `[data-theme='chirpy-light' | 'chirpy-dark']` attribute on <html>
- * (configured via `themeCssSelector` in astro.config.mjs).
- *
- * The few overrides below just make the code-block frames sit nicely
- * inside our prose container.
- */
-@layer components {
-  .prose-chirpy .expressive-code {
+  /* Expressive Code framing inside prose */
+  .prose-ai .expressive-code {
     @apply my-6;
   }
-  .prose-chirpy .expressive-code pre {
-    @apply bg-transparent p-0;
-  }
-  .prose-chirpy :not(pre) > code {
-    @apply text-primary bg-base-200 rounded px-1.5 py-0.5 text-[0.9em] font-medium;
+  .prose-ai .expressive-code pre {
+    background: transparent;
+    padding: 0;
   }
 }
 
-/* ---------- TOC sticky highlight (uses chirpy-aside rail) ---------- */
+/* =====================================================================
+   Components reused across listing pages
+   ===================================================================== */
 @layer components {
-  .toc ol {
-    border-left: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  .ai-page-heading {
+    @apply flex flex-col gap-2 border-b pb-8;
+    border-color: var(--color-hairline);
   }
-  .toc a {
-    @apply text-base-content/70 block py-1 pr-2 pl-3 text-sm transition-colors;
-    margin-left: -1px;
-    border-left: 1px solid transparent;
-  }
-  .toc a:hover {
-    @apply text-primary;
-    border-left-color: var(--color-primary);
-  }
-  .toc a[data-active='true'] {
-    @apply text-primary font-semibold;
-    border-left-color: var(--color-primary);
-  }
-  .toc .toc-level-3 a {
-    @apply pl-6;
-  }
-  .toc .toc-level-4 a {
-    @apply pl-9;
-  }
-
-  /* Smart TOC: H3/H4 entries are hidden until their parent H2 is the
-     active section (set by the scroll-spy script via data-section-active).
-     H2 entries are always visible. */
-  .toc .toc-level-3,
-  .toc .toc-level-4 {
-    display: none;
-  }
-  .toc .toc-level-3[data-section-active='true'],
-  .toc .toc-level-4[data-section-active='true'] {
-    display: list-item;
-    animation: toc-fade-in 180ms ease-out;
-  }
-
-  @keyframes toc-fade-in {
-    from {
-      opacity: 0;
-      transform: translateY(-2px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-}
-
-/* ---------- Sidebar nav ---------- */
-@layer components {
-  .chirpy-nav {
-    @apply flex w-full flex-col gap-0.5;
-  }
-  .chirpy-nav-link {
-    @apply relative flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-[0.78rem] font-bold tracking-[0.07em] uppercase;
-    color: var(--color-sidebar-text);
-    transition:
-      color 0.2s ease,
-      background-color 0.2s ease;
-  }
-  .chirpy-nav-link:hover {
+  .ai-page-kicker {
+    @apply text-xs font-semibold tracking-[0.18em] uppercase;
     color: var(--color-primary);
-    background: color-mix(in oklab, var(--color-primary) 4%, transparent);
+    font-family: var(--font-mono);
   }
-  .chirpy-nav-link[aria-current='page'] {
+  .ai-page-title {
+    @apply text-4xl leading-tight font-medium tracking-tight sm:text-5xl;
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+  .ai-page-meta {
+    @apply text-sm;
+    color: var(--color-muted);
+  }
+
+  .ai-empty {
+    @apply rounded-md border border-dashed px-6 py-12 text-center text-sm;
+    border-color: var(--color-hairline);
+    color: var(--color-muted);
+  }
+
+  .ai-tag {
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium transition;
+    border-color: var(--color-hairline);
+    background: var(--color-card);
+    color: var(--color-muted);
+  }
+  .ai-tag:hover {
+    border-color: var(--color-primary);
     color: var(--color-primary);
-    background: color-mix(in oklab, var(--color-primary) 8%, transparent);
-  }
-  .chirpy-nav-link[aria-current='page']:hover {
-    background: color-mix(in oklab, var(--color-primary) 12%, transparent);
-  }
-  .chirpy-nav-link i,
-  .chirpy-nav-link svg {
-    @apply h-4 w-4 shrink-0;
-  }
-
-  .chirpy-social {
-    @apply hover:text-primary flex h-9 w-9 items-center justify-center rounded-full transition;
-    color: var(--color-sidebar-text);
-    background: color-mix(in oklab, var(--color-sidebar-text) 10%, transparent);
-  }
-  .chirpy-social:hover {
-    background: color-mix(in oklab, var(--color-primary) 14%, transparent);
   }
 }
 
-/* ---------- Trending tag pill (Chirpy outline-primary) ---------- */
+/* =====================================================================
+   Header search pill + floating back-to-top (shared)
+   ===================================================================== */
 @layer components {
-  .post-tag {
-    @apply border-primary/60 bg-base-100 text-primary hover:bg-primary hover:text-primary-content inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium transition;
+  .ai-search-pill {
+    @apply inline-flex h-10 items-center gap-2 rounded-full border px-3.5 text-sm transition;
+    border-color: var(--color-hairline);
+    background: var(--color-card);
+    color: var(--color-muted);
   }
-}
+  .ai-search-pill:hover {
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+  .ai-search-pill__label {
+    @apply hidden truncate text-left md:block;
+  }
+  .ai-search-pill__kbd {
+    @apply inline-flex h-6 items-center rounded-md px-1.5 text-xs;
+    background: var(--color-surface);
+    border: 1px solid var(--color-hairline);
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+  }
 
-/* ---------- Header search pill ---------- */
-@layer components {
-  .search-pill {
-    @apply border-base-300 bg-base-100 text-base-content/70 hover:text-base-content hover:border-base-content/30 inline-flex h-9 items-center gap-2 rounded-full border pr-1.5 pl-3 text-sm transition;
-  }
-  .search-pill__icon {
-    @apply shrink-0;
-  }
-  .search-pill__label {
-    @apply flex-1 truncate text-left;
-  }
-  .search-pill__kbd {
-    @apply border-base-300 bg-base-200 text-base-content/70 inline-flex h-6 min-w-6 items-center justify-center rounded-md border px-1.5 font-mono text-xs;
-  }
-  /* On narrow viewports the topbar gets crowded (hamburger + breadcrumb +
-     site title + search + language switcher), so collapse the search pill
-     to a circular icon-only button to free up horizontal space. */
-  @media (max-width: 639px) {
-    .search-pill {
-      @apply h-9 w-9 justify-center gap-0 px-0;
-    }
-    .search-pill__label,
-    .search-pill__kbd {
-      display: none;
-    }
-  }
-}
-
-/* ---------- Back-to-top floating button ---------- */
-@layer components {
-  .back-to-top {
-    @apply border-base-300 bg-base-100 text-base-content fixed right-6 bottom-6 z-30 flex h-11 w-11 items-center justify-center rounded-full border shadow-md transition;
+  .ai-back-to-top {
+    @apply fixed right-6 bottom-6 z-30 flex h-11 w-11 items-center justify-center rounded-full border transition;
+    border-color: var(--color-hairline);
+    background: var(--color-card);
+    color: var(--color-ink);
     opacity: 0;
     pointer-events: none;
   }
-  .back-to-top.is-visible {
+  .ai-back-to-top.is-visible {
     opacity: 1;
     pointer-events: auto;
   }
 }
 
-/* ---------- Reduced motion ---------- */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* ---------- Theme switch: circular reveal via View Transitions ---------- */
-/*
- * When the theme toggle fires, we wrap the swap in
- * `document.startViewTransition()`. The browser snapshots the old root
- * and cross-fades it with the new one. We replace the default fade with
- * a circular clip-path expanding from the cursor.
- *
- * Directional polish:
- *   - Switching TO dark: new (dark) image is revealed on top.
- *   - Switching TO light: old (dark) image is wiped away on top, so the
- *     light theme appears to peel through.
- */
+/* =====================================================================
+   Theme switch: circular reveal via View Transitions
+   ===================================================================== */
 @supports (view-transition-name: root) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
@@ -757,7 +978,6 @@
     mix-blend-mode: normal;
   }
 
-  /* Going to dark: animate the NEW snapshot in. */
   html[data-theme-anim='to-dark']::view-transition-old(root) {
     z-index: 1;
   }
@@ -766,7 +986,6 @@
     animation: theme-reveal 520ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
-  /* Going to light: animate the OLD (dark) snapshot away. */
   html[data-theme-anim='to-light']::view-transition-old(root) {
     z-index: 2;
     animation: theme-conceal 520ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -799,40 +1018,34 @@
   ::view-transition-new(root) {
     animation: none !important;
   }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* ---------- Custom search modal (Pagefind headless API) ---------- */
-/*
- * The site uses Pagefind's headless `pagefind.js` API and renders all
- * results with our own Tailwind / daisyUI markup. We intentionally do
- * NOT load `pagefind-ui.css`, so none of Pagefind's default styles
- * apply. The rules below cover the few visual states the JS layer
- * cannot express purely with utility classes.
- */
-
-/* Highlight the keyboard-focused result. */
+/* =====================================================================
+   Search modal (Pagefind headless) shared states
+   ===================================================================== */
 .search-result[data-active='true'] {
   background: color-mix(in oklab, var(--color-primary) 8%, transparent);
 }
 .search-result[data-active='true'] h3 {
   color: var(--color-primary);
 }
-
-/* Hover wash mirrors the keyboard-focus state. */
 .search-result:hover {
   background: color-mix(in oklab, var(--color-primary) 5%, transparent);
 }
-
-/* `<mark>` in result excerpts (Pagefind wraps matched terms). */
 [data-search-results] mark {
   background: color-mix(in oklab, var(--color-warning) 30%, transparent);
-  color: var(--color-base-content);
+  color: var(--color-ink);
   padding: 0 0.15em;
   border-radius: 0.2rem;
   font-weight: 600;
 }
-
-/* Hide the native clear (×) the browser adds to <input type="search">. */
 [data-search-input]::-webkit-search-cancel-button,
 [data-search-input]::-webkit-search-decoration {
   -webkit-appearance: none;

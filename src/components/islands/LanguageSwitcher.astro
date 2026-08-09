@@ -41,7 +41,7 @@ const fallbackBase = stripLocale(Astro.url.pathname);
       <div
         tabindex="0"
         role="button"
-        class="chirpy-social"
+        class="ai-btn ai-btn-outline h-10 w-10 rounded-full"
         aria-haspopup="menu"
         aria-label={t('lang.switcher')}
         title={t('lang.switcher')}
@@ -50,9 +50,10 @@ const fallbackBase = stripLocale(Astro.url.pathname);
       </div>
       <ul
         tabindex="0"
-        class="menu dropdown-content rounded-box border-base-300 bg-base-100 z-50 mt-2 w-44 border p-2 shadow-lg"
+        class="menu dropdown-content z-50 mt-2 w-44 rounded-box border p-2 shadow-lg"
         role="menu"
         data-lang-switcher
+        style="background:var(--color-card);border-color:var(--color-hairline)"
       >
         <li class="menu-title text-base-content/70 px-2 py-1 text-xs tracking-wide uppercase">
           {t('lang.switcher')}

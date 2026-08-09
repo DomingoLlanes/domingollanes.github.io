@@ -22,12 +22,12 @@ const groups = groupByYearMonth(posts, locale);
   pathWithoutLocale="/archives/"
   crumbs={[{ label: t('archives.title') }]}
 >
-  <header class="mb-6">
-    <h1 class="text-3xl font-bold tracking-tight">{t('archives.title')}</h1>
-  </header>
+  <div class="ai-page-heading mb-10">
+    <h1 class="ai-page-title">{t('archives.title')}</h1>
+  </div>
   {
     groups.length === 0 ? (
-      <p class="text-base-content/70">{t('archives.empty')}</p>
+      <p class="ai-empty">{t('archives.empty')}</p>
     ) : (
       <div id="archives">
         {groups.map((g, gi) => {

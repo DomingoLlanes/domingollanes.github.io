@@ -1,10 +1,15 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import Hero from '~/components/Hero.astro';
+import FeaturedPost from '~/components/FeaturedPost.astro';
 import PostList from '~/components/PostList.astro';
+import ConceptsBand from '~/components/ConceptsBand.astro';
+import Newsletter from '~/components/Newsletter.astro';
 import Pagination from '~/components/Pagination.astro';
 import { SITE } from '~/config';
-import { localizedPath } from '~/i18n/utils';
+import { localizedPath, useTranslations } from '~/i18n/utils';
 import { getPosts } from '~/utils/posts';
+import { Icon } from 'astro-icon/components';
 
 export function getStaticPaths() {
   return SITE.locales.map((l) => ({
@@ -13,22 +18,41 @@ export function getStaticPaths() {
   }));
 }
 const { locale } = Astro.props;
+const t = useTranslations(locale);
 
 const posts = await getPosts(locale);
 const pageSize = SITE.postsPerPage;
 const lastPage = Math.max(1, Math.ceil(posts.length / pageSize));
 const currentPage = 1;
-const pagePosts = posts.slice(0, pageSize);
+const [featured, ...rest] = posts;
 
 const hrefForPage = (n: number) => localizedPath(n === 1 ? '/' : `/page/${n}/`, locale);
 ---
 
 <BaseLayout title={SITE.title} description={SITE.description} pathWithoutLocale="/">
-  <PostList posts={pagePosts} locale={locale} />
-  <Pagination
-    currentPage={currentPage}
-    lastPage={lastPage}
-    hrefForPage={hrefForPage}
-    locale={locale}
-  />
+  <Hero locale={locale} />
+
+  <section class="pt-16 lg:pt-20">
+    <FeaturedPost post={featured} locale={locale} />
+  </section>
+
+  <section class="pt-16 lg:pt-20" aria-label={t('home.latest')}>
+    <header class="mb-4 flex items-end justify-between gap-4">
+      <h2 class="ai-display text-3xl sm:text-4xl">{t('home.latest')}</h2>
+      <a
+        href={localizedPath('/rss.xml', locale)}
+        class="ai-kicker ai-kicker--accent"
+      >
+        {t('home.rss')}
+        <Icon name="lucide:arrow-right" width={14} height={14} />
+      </a>
+    </header>
+    <PostList posts={rest} locale={locale} />
+    <Pagination currentPage={currentPage} lastPage={lastPage} hrefForPage={hrefForPage} locale={locale} />
+  </section>
+
+  <ConceptsBand locale={locale} />
+
+  {/* Hidden: no subscription target on this blog yet. */}
+  {/* <Newsletter locale={locale} /> */}
 </BaseLayout>

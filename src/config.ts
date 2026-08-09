@@ -19,6 +19,46 @@ export const locales = ['es'] as const;
 export type Locale = (typeof locales)[number];
 
 /**
+ * Active daisyUI theme pair. The ai-blog theme is the default; the
+ * chirpy themes remain defined in global.css as a fallback — switch the
+ * values below (and the `<html data-theme>` + toggle strings) to revert.
+ */
+export const THEME = {
+  /** Light theme name (must match a daisyUI theme in global.css). */
+  light: 'ai-blog-light',
+  /** Dark theme name (must match a daisyUI theme in global.css). */
+  dark: 'ai-blog-dark',
+} as const;
+
+/**
+ * Category → chip color mapping, mirroring the ai-blog design tokens.
+ * Keys are lowercase, accent-stripped category slugs.
+ */
+export const CATEGORY_COLORS: Record<string, { fg: string; bg: string }> = {
+  noticias: { fg: '#B45309', bg: '#F5E6D0' },
+  pruebas: { fg: '#4F46E5', bg: '#E7E3FA' },
+  conceptos: { fg: '#0F766E', bg: '#DCEDEA' },
+  'ia-local': { fg: '#C2410C', bg: '#F6E3D8' },
+  suscripciones: { fg: '#6D28D9', bg: '#EDE4FA' },
+};
+
+/** Look up the chip colors for a category, falling back to accent. */
+export function categoryColor(category: string): { fg: string; bg: string } {
+  return (
+    CATEGORY_COLORS[slugifyCategory(category)] ?? { fg: '#FF5C39', bg: '#FFE8DD' }
+  );
+}
+
+function slugifyCategory(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
  * Author + social handles. Filled in from env vars (see `.env.example`)
  * so identifiers never need to be hard-coded into source.
  *

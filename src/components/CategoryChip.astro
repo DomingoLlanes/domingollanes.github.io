@@ -1,0 +1,18 @@
+---
+/**
+ * Category/kind chip with the ai-blog per-category colors.
+ */
+import { categoryColor } from '../config';
+
+interface Props {
+  label: string;
+  className?: string;
+}
+
+const { label, className = '' } = Astro.props;
+const { fg, bg } = categoryColor(label);
+---
+
+<span class={`ai-chip ${className}`} style={{ color: fg, background: bg }}>
+  {label}
+</span>

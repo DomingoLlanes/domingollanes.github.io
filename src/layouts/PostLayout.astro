@@ -5,6 +5,7 @@ import SmartImage from '../components/SmartImage.astro';
 import TableOfContents from '../components/islands/TableOfContents.astro';
 import Giscus from '../components/islands/Giscus.astro';
 import MathStyles from '../components/MathStyles.astro';
+import CategoryChip from '../components/CategoryChip.astro';
 import { Icon } from 'astro-icon/components';
 import { GISCUS, SITE, type Locale } from '../config';
 import { useTranslations, stripLocale, formatDate, isoDate, localizedPath } from '../i18n/utils';
@@ -12,13 +13,13 @@ import { readingTime } from '../utils/reading-time';
 import {
   type Post,
   tagPath,
-  categoryPath,
   getTranslations,
   postPath,
   postSlug,
   heroImage,
   heroImageSrc,
   shouldShowHero,
+  getPosts,
 } from '../utils/posts';
 import { buildSeo } from '../utils/seo';
 import type { MarkdownHeading } from 'astro';
@@ -55,9 +56,13 @@ const heroAsset = heroImage(post);
 const showHero = shouldShowHero(post);
 const heroAlt = post.data.heroImageAlt ?? '';
 
-const articleClass = SITE.boxedArticles
-  ? 'border-base-300 bg-base-100 rounded-md border px-5 py-8 sm:px-8 sm:py-10'
-  : 'px-1 py-6 sm:px-2 sm:py-8';
+// Related posts: same category first, then by recency, excluding current.
+const allPosts = (await getPosts(locale)).filter((p) => p.id !== post.id);
+const category = post.data.categories[0] ?? '';
+const related = [
+  ...allPosts.filter((p) => p.data.categories.includes(category)),
+  ...allPosts.filter((p) => !p.data.categories.includes(category)),
+].slice(0, 3);
 
 // Use hero image for OG if available, otherwise fallback to the generated OG image
 // (unless Auto-OG is disabled globally or skipped in CI).
@@ -102,108 +107,162 @@ const crumbs = [
   availableLocales={availableLocales}
 >
   {post.data.math && <MathStyles />}
-  {
-    post.data.toc && headings.length > 0 && (
-      <TableOfContents slot="aside-bottom" headings={headings} locale={locale} />
-    )
-  }
 
-  <article class={articleClass}>
-    <header class="mb-8">
-      <h1
-        class="text-base-content text-3xl leading-tight font-extrabold tracking-tight sm:text-[2.25rem]"
-      >
-        {post.data.title}
-      </h1>
-      <p class="text-base-content/65 mt-3 text-lg">{post.data.description}</p>
+  <article>
+    {/* === Header === */}
+    <header class="ai-article-header">
+      <a href={localizedPath('/', locale)} class="ai-kicker mb-8 w-fit">
+        <Icon name="lucide:arrow-left" width={14} height={14} />
+        {t('nav.posts')}
+      </a>
 
-      <div class="text-base-content/70 mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-        <span class="inline-flex items-center gap-1">
-          <Icon name="lucide:calendar-days" width={14} height={14} />
-          <time datetime={isoDate(post.data.pubDate)}>{formatDate(post.data.pubDate, locale)}</time>
+      <div class="ai-post-row__kind mb-5">
+        {category && <CategoryChip label={category} />}
+        <time datetime={isoDate(post.data.pubDate)} class="ai-post-row__meta">
+          {formatDate(post.data.pubDate, locale, {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          })}
+          {' · '}
+          {minutes} min
+        </time>
+      </div>
+
+      <h1 class="ai-article-title mb-6">{post.data.title}</h1>
+
+      <p class="ai-sub mb-8 max-w-2xl text-lg">{post.data.description}</p>
+
+      <div class="ai-author">
+        <span class="ai-avatar h-11 w-11" aria-hidden="true">
+          {SITE.author.name.charAt(0)}
         </span>
-        {
-          post.data.updatedDate && (
-            <span class="inline-flex items-center gap-1">
-              <Icon name="lucide:check" width={14} height={14} />
-              <time datetime={isoDate(post.data.updatedDate)}>
-                {t('post.updatedOn')} {formatDate(post.data.updatedDate, locale)}
-              </time>
-            </span>
-          )
-        }
-        {
-          post.data.categories.length > 0 && (
-            <span class="inline-flex items-center gap-1">
-              <Icon name="lucide:folder" width={14} height={14} />
-              {post.data.categories.map((c, i) => (
-                <>
-                  {i > 0 && <span class="text-base-content/40 mx-0.5">,</span>}
-                  <a href={categoryPath(locale, c)} class="hover:text-primary">
-                    {c}
-                  </a>
-                </>
-              ))}
-            </span>
-          )
-        }
-        <span class="inline-flex items-center gap-1">
-          <Icon name="lucide:clock" width={14} height={14} />
-          {minutes}
-          {t('post.readingTime')}
-        </span>
+        <p class="ai-byline">
+          <span class="font-semibold" style="color:var(--color-ink)">
+            {SITE.author.name}
+          </span>
+          <br />
+          {SITE.author.bio}
+        </p>
       </div>
     </header>
 
     {
       showHero && heroAsset && (
-        <figure class="post-hero mb-8">
-          <div class="post-hero__frame">
-            <SmartImage
-              src={heroAsset}
-              alt={heroAlt}
-              class="post-hero__img"
-              loading="eager"
-              widths={[480, 768, 1024, 1280, 1600]}
-              sizes="(max-width: 768px) 100vw, 1024px"
-              quality={82}
-            />
-          </div>
+        <figure class="mt-10">
+          <SmartImage
+            src={heroAsset}
+            alt={heroAlt}
+            class="block w-full"
+            style="max-width:100%;height:auto;object-fit:cover;border-radius:0.5rem"
+            loading="eager"
+            widths={[480, 768, 1024, 1280, 1600]}
+            sizes="(max-width: 768px) 100vw, 900px"
+            quality={82}
+          />
           {heroAlt && (
-            <figcaption class="text-base-content/70 mt-2 text-center text-xs">{heroAlt}</figcaption>
+            <figcaption class="mt-2 text-center text-xs" style="color:var(--color-muted)">
+              {heroAlt}
+            </figcaption>
           )}
         </figure>
       )
     }
 
-    <div class="prose-chirpy max-w-none">
-      <slot />
+    {/* === Body: lateral TOC + prose column === */}
+    <div
+      class:list={[
+        'ai-layout-article',
+        post.data.toc && headings.length > 0 ? 'ai-layout-article--toc' : '',
+      ]}
+    >
+      {post.data.toc && headings.length > 0 && (
+        <TableOfContents headings={headings} locale={locale} />
+      )}
+      <div class="ai-article-body">
+        <div class="prose-ai max-w-none">
+          <slot />
+        </div>
+
+        {
+          post.data.tags.length > 0 && (
+            <footer class="mt-12 flex flex-wrap items-center gap-2 border-t pt-8">
+              <span class="ai-post-row__meta mr-2">{t('post.tags')}</span>
+              {post.data.tags.map((tag) => (
+                <a href={tagPath(locale, tag)} class="ai-tag text-xs">
+                  #{tag}
+                </a>
+              ))}
+            </footer>
+          )
+        }
+      </div>
+    </div>
+
+    {/* === Author box === */}
+    <div class="ai-author-box mt-14">
+      <span class="ai-avatar h-14 w-14 text-base" aria-hidden="true">
+        {SITE.author.name.charAt(0)}
+      </span>
+      <div class="flex flex-1 flex-col gap-1.5">
+        <p class="ai-author-box__name">{SITE.author.name}</p>
+        <p class="ai-author-box__bio">{SITE.author.bio}</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="ai-post-row__meta">{t('post.share')}</span>
+        <a href={postPath(post)} class="ai-btn ai-btn-outline h-10 w-10 rounded-full" aria-label={t('post.copyLink')}>
+          <Icon name="lucide:link" width={15} height={15} />
+        </a>
+        <a href={localizedPath('/rss.xml', locale)} class="ai-btn ai-btn-outline h-10 w-10 rounded-full" aria-label="RSS">
+          <Icon name="lucide:rss" width={15} height={15} />
+        </a>
+      </div>
+    </div>
+
+    {/* === Prev / next === */}
+    <div class="mt-10">
+      <PostNav prev={prev} next={next} locale={locale} />
     </div>
 
     {
-      post.data.tags.length > 0 && (
-        <footer class="border-base-300 mt-10 flex flex-wrap items-center gap-2 border-t pt-6">
-          <span class="text-base-content/70 text-sm font-semibold tracking-wide uppercase">
-            {t('post.tags')}
-          </span>
-          {post.data.tags.map((tag) => (
-            <a href={tagPath(locale, tag)} class="post-tag text-xs">
-              {tag}
-            </a>
-          ))}
-        </footer>
+      commentsEnabled ? (
+        <div class="mt-12">
+          <Giscus locale={locale} />
+        </div>
+      ) : (
+        post.data.comments === false && (
+          <p class="mt-12 text-sm" style="color:var(--color-muted)">
+            {t('post.commentsDisabled')}
+          </p>
+        )
       )
     }
 
-    <PostNav prev={prev} next={next} locale={locale} />
-
+    {/* === Related posts === */}
     {
-      commentsEnabled ? (
-        <Giscus locale={locale} />
-      ) : (
-        post.data.comments === false && (
-          <p class="text-base-content/70 mt-10 text-sm">{t('post.commentsDisabled')}</p>
-        )
+      related.length > 0 && (
+        <section class="mt-16" aria-label={t('post.related')}>
+          <h2 class="ai-display mb-8 text-3xl">{t('post.related')}</h2>
+          <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+            {related.map((p) => (
+              <a href={postPath(p)} class="ai-related__card block">
+                {p.data.categories[0] && (
+                  <div class="ai-post-row__kind">
+                    <CategoryChip label={p.data.categories[0]} />
+                  </div>
+                )}
+                <span class="ai-related__title line-clamp-3">{p.data.title}</span>
+                <span class="ai-post-row__meta">
+                  {formatDate(p.data.pubDate, locale, {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
       )
     }
   </article>
