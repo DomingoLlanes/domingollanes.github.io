@@ -2,7 +2,11 @@
 title: "Qué es un LLM y cómo funciona por dentro (sin jerga)"
 description: "Qué es un LLM y cómo funciona: tokens, parámetros, Transformer y por qué los chatbots olvidan. Explicado sin conocimientos previos."
 pubDate: 2026-08-14
+categories: [Conceptos básicos]
 tags: [LLM, large language model, inteligencia artificial, cómo funciona la IA, ChatGPT]
+draft: false
+layout: PostLayout
+translationKey: es
 ---
 
 # Qué es un LLM: cómo funciona un modelo de lenguaje grande por dentro
