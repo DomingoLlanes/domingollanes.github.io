@@ -9,8 +9,6 @@ layout: PostLayout
 translationKey: es
 ---
 
-# Qué es un LLM: cómo funciona un modelo de lenguaje grande por dentro
-
 Si has usado ChatGPT, Claude o Gemini, ya has interactuado con un **LLM**. Has oído que son "grandes modelos de lenguaje", pero... ¿qué significa eso exactamente? En este artículo, el primero de una serie para entender la IA desde dentro, te explico **qué es un LLM** sin necesidad de conocimientos previos: solo curiosidad técnica.
 
 ## ¿Qué es un LLM?
