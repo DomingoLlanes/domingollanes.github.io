@@ -4,7 +4,7 @@ description: "Qué es opencode, cómo funciona como agente de IA en el terminal,
 pubDate: 2026-08-17
 categories: [Herramientas, Conceptos]
 tags: [open source, agentes, LLM, ia-local, privacidad]
-draft: true
+draft: false
 toc: true
 layout: PostLayout
 translationKey: es
