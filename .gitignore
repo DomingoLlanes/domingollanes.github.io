@@ -40,3 +40,6 @@ pagefind/
 *.log
 
 bash.exe*
+
+AGENTS.md
+.opencode/
