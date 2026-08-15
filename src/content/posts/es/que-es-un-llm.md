@@ -2,7 +2,7 @@
 title: "Qué es un LLM y cómo funciona por dentro (sin jerga)"
 description: "Qué es un LLM y cómo funciona: tokens, parámetros, Transformer y por qué los chatbots olvidan. Explicado sin conocimientos previos."
 pubDate: 2026-08-14
-categories: [Conceptos básicos]
+categories: [Conceptos]
 tags: [LLM, large language model, inteligencia artificial, cómo funciona la IA, ChatGPT]
 draft: false
 layout: PostLayout
@@ -77,3 +77,7 @@ Además, el modelo es *stateless*: no recuerda nada entre peticiones; la app ree
 Un **LLM** es un predictor estadístico de texto a escala gigante: trocea el texto en tokens, lo procesa con una red neuronal basada en atención y encadena predicciones del siguiente token. No es una base de datos ni navega por internet por sí mismo (los chatbots modernos añaden búsqueda web como herramienta externa); no "sabe" la verdad, produce el texto más *plausible*.
 
 En el próximo artículo de la serie exploraremos los **tokens** a fondo: cómo se construyen, por qué cuestan dinero y qué fallos explican.
+
+---
+
+*Este contenido se generó con asistencia de IA.*
