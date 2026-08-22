@@ -1,10 +1,10 @@
 ---
 title: "Tokens: la moneda de los LLM (qué son y por qué importan)"
 description: "Qué es un token, cómo se construye el vocabulario de un LLM con BPE y por qué se factura por token. Explicado sin jerga."
-pubDate: 2026-08-21
+pubDate: 2026-08-22
 categories: [Conceptos]
 tags: [LLM, tokenización, contexto, cómo funciona la IA]
-draft: true
+draft: false
 toc: true
 layout: PostLayout
 translationKey: es
@@ -108,8 +108,8 @@ Ninguno de estos problemas es un "bug" que se pueda parchear: son **consecuencia
 
 ## Fuentes
 
-- AI/TLDR. *What Is a Token in an LLM?*. https://ai-tldr.dev/learn/llm-fundamentals/tokens-and-tokenization/what-is-a-token/
-- Wikipedia. *Large language model*. https://en.wikipedia.org/wiki/Large_language_model
+- AI/TLDR. *What Is a Token in an LLM?*. <https://ai-tldr.dev/learn/llm-fundamentals/tokens-and-tokenization/what-is-a-token/>
+- Wikipedia. *Large language model*. <https://en.wikipedia.org/wiki/Large_language_model>
 
 ---
 
